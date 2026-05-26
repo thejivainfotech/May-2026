@@ -1,0 +1,165 @@
+{%- style -%}
+  .edge-banner-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    background-color: {{ section.settings.bg_color }};
+    overflow: hidden;
+    min-height: 500px; /* Adjust as needed */
+  }
+
+  .edge-banner-{{ section.id }} .image-side {
+    flex: 1 1 50%;
+    position: relative;
+    line-height: 0;
+  }
+
+  .edge-banner-{{ section.id }} .image-side img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    /* Negative margin to ensure it touches the edge if parent has padding */
+    margin-left: 0;
+  }
+
+  .edge-banner-{{ section.id }} .content-side {
+    flex: 1 1 50%;
+    padding: 5% 10%;
+    text-align: {{ section.settings.text_alignment }};
+  }
+
+  .edge-banner-{{ section.id }} h2 {
+    font-size: 64px;
+    margin: 0 0 20px 0;
+    line-height: 1.1;
+    color: {{ section.settings.text_color }};
+    text-transform: uppercase;
+  }
+
+  .edge-banner-{{ section.id }} .description {
+    font-size: 1.2rem;
+    color: #838f9f;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+
+  .edge-banner-{{ section.id }} .btn {
+    background-color: {{ section.settings.btn_bg }};
+    color: {{ section.settings.btn_text }};
+    padding: 8px 24px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-family: "Antonio", sans-serif;
+    font-size: 20px;
+    display: inline-block;
+  }
+
+  @media (max-width: 767px) {
+    .edge-banner-{{ section.id }} {
+      flex-direction: column;
+    }
+    .edge-banner-{{ section.id }} .image-side,
+    .edge-banner-{{ section.id }} .content-side {
+      flex: 1 1 100%;
+      width: 100%;
+      text-align: center;
+    }
+  }
+{%- endstyle -%}
+
+<section class="edge-banner-{{ section.id }}">
+  <div class="image-side">
+    {%- if section.settings.image != blank -%}
+      {{ section.settings.image | image_url: width: 1500 | image_tag: loading: 'lazy' }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+  </div>
+
+  <div class="content-side">
+    <h2>{{ section.settings.heading }}</h2>
+    <div class="description">{{ section.settings.text }}</div>
+    {%- if section.settings.button_label != blank -%}
+      <a href="{{ section.settings.button_link }}" class="btn">{{ section.settings.button_label }}</a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Edge Image Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Left Side Image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "HEALTHY DOESN'T NEED TO BE BORING"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Description",
+      "default": "<p>Just rich, natural, flavour-packed sauces made to bring real excitement back...</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button Background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Edge Image Banner"
+    }
+  ]
+}
+{% endschema %}
