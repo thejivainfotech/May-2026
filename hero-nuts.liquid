@@ -1,0 +1,292 @@
+<section class="hero-nuts-section" id="Hero-{{ section.id }}">
+  <div class="hero-wrapper {% if section.settings.show_border %}has-border{% endif %}">
+    
+    <h1 class="hero-main-title">{{ section.settings.main_title | upcase }}</h1>
+
+    <div class="hero-sub-header-row">
+      
+      <a href="{{ section.settings.offer_text_link }}"><div class="hero-offer-badge">
+        {{ section.settings.offer_text | upcase }}
+      </div></a>
+
+      <div class="hero-reviews-card">
+        <div class="user-avatars">
+           {% for block in section.blocks %}
+             {% if block.type == 'avatar' %}
+               <img src="{{ block.settings.avatar_img | img_url: '100x100' }}" alt="user">
+             {% endif %}
+           {% endfor %}
+        </div>
+        <div class="review-content">
+          <div class="review-stats">
+            <span class="count">{{ section.settings.review_count }}</span>
+            <div class="stars">★★★★★</div>
+          </div>
+          <p class="happy-text">HAPPY CUSTOMERS</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-image-container">
+      {% if section.settings.hero_image != blank %}
+        <img src="{{ section.settings.hero_image | img_url: 'master' }}" alt="{{ section.settings.main_title }}">
+      {% endif %}
+    </div>
+
+    <!-- Nayi Bottom Full-Width Image Yahan Add Ki Hai -->
+    
+  </div>
+</section>
+{% if section.settings.bottom_full_width_image != blank %}
+  <div class="hero-bottom-image-full">
+    <img src="{{ section.settings.bottom_full_width_image | img_url: 'master' }}" alt="Bottom Banner">
+  </div>
+{% endif %}
+
+<style>
+.hero-nuts-section {
+    background-color: {{ section.settings.bg_color }};
+    padding: 40px 0px;
+    padding-top: 30px;
+    padding-bottom: 0px;
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.hero-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.has-border {
+  border: 3px solid #c4b7aa;
+  border-radius: 40px;
+  padding: 40px 0px;
+  padding-bottom: 0px;
+}
+
+/* Title Styling */
+.hero-main-title {
+  font-size: 126px;
+  color: #fff;
+  text-align: center;
+  z-index: 5; 
+  width: 100%;
+  margin: 0;
+  line-height: 0.85;
+  position: relative;
+  top: 105px;
+}
+
+/* Flex Row for Badges */
+.hero-sub-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 40px;
+  z-index: 7;
+  margin-top: 30px;
+  position: relative;
+  top: 110px;
+}
+
+.hero-offer-badge {
+    background: #1a242f;
+    color: #fff;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 24px;
+    font-family: "Antonio", sans-serif;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    font-family: "Antonio", sans-serif;
+    font-weight: 700;
+}
+
+.hero-reviews-card {
+  background: #8c8174;
+  padding: 10px 25px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.user-avatars {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatars img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  margin-right: -15px;
+  object-fit: cover;
+}
+
+.review-content {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    {% comment %} font-family: 'Anton'; {% endcomment %}
+}
+
+.review-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.review-stats .count {
+  font-size: 18px;
+  font-family: "Antonio", sans-serif;
+  font-weight: 700;
+}
+
+.review-stats .stars {
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.happy-text {
+    margin: 4px 0 0 0;
+    font-family: "Antonio", sans-serif !important;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+/* Image Positioning */
+.hero-image-container {
+  z-index: 2;
+  width: 100%;
+  max-width: 100%;
+  margin-top: -430px;
+  transition: transform 0.3s ease;
+}
+
+.hero-image-container img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 40px;
+}
+
+/* New Bottom Image Style */
+.hero-bottom-image-full {
+    width: 100%;
+    margin-top: -340px;
+    position: relative;
+}
+
+.hero-bottom-image-full img {
+  width: 100%;
+  display: block;
+  height: auto;
+}
+
+/* Mobile Responsive */
+@media only screen and (max-width: 767px) {
+  .hero-nuts-section {
+    min-height: 70vh;
+}
+  .hero-bottom-image-full {
+    display: none;
+  }
+  .hero-wrapper {
+    margin-inline: 5px;
+  }
+  .hero-sub-header-row {
+    flex-direction: column;
+    gap: 15px;
+    padding: 0 10px;
+    z-index: 1;
+  }
+  .hero-image-container {
+    margin-top: -20px;
+  }
+  .hero-main-title {
+    font-size: 60px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Hero Nuts Banner",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#b7a99a"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show Section Border",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Main Heading",
+      "default": "GO NUTS ON EVERYTHING"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Main Splash Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bottom_full_width_image",
+      "label": "Bottom Full Width Image"
+    },
+    {
+      "type": "text",
+      "id": "offer_text",
+      "label": "Offer Text",
+      "default": "MAY OFFER - 30% OFF"
+    },
+    {
+      "type": "url",
+      "id": "offer_text_link",
+      "label": "Offer link"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Review Count",
+      "default": "500+"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "avatar",
+      "name": "User Avatar",
+      "settings": [
+        { "type": "image_picker", "id": "avatar_img", "label": "User Image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Nuts Banner"
+    }
+  ]
+}
+{% endschema %}
