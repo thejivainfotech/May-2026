@@ -1,0 +1,602 @@
+{% comment %}
+  Section: Every Meal Covered — Hero Banner
+  Theme: Savor (Shopify)
+  v3 — Pixel-perfect match to reference screenshot
+{% endcomment %}
+
+<section
+  id="mc-{{ section.id }}"
+  class="mc-section"
+  style="
+    --mc-bg:         {{ section.settings.background_color }};
+    --mc-heading:    {{ section.settings.heading_color }};
+    --mc-text:       {{ section.settings.text_color }};
+    --mc-btn-bg:     {{ section.settings.button_bg_color }};
+    --mc-btn-text:   {{ section.settings.button_text_color }};
+    --mc-wm:         {{ section.settings.watermark_color }};
+    --mc-pt:         {{ section.settings.section_padding_top }}px;
+    --mc-height:     {{ section.settings.section_min_height }}px;
+    --mc-h-size:     {{ section.settings.heading_font_size }}px;
+    --mc-d-size:     {{ section.settings.description_font_size }}px;
+    --mc-dot-color:  {{ section.settings.dot_color }};
+  "
+>
+<div class="tji_wd">
+  {%- comment -%} ── BOTTOM-LEFT CORNER IMAGE ── {%- endcomment -%}
+  {%- if section.settings.corner_image != blank -%}
+    <div class="mc-corner"
+      style="
+        width:  {{ section.settings.corner_image_width }}px;
+        bottom: {{ section.settings.corner_image_bottom }}px;
+        left:   {{ section.settings.corner_image_left }}px;
+      "
+    >
+      <img
+        src="{{ section.settings.corner_image | image_url: width: 300 }}"
+        alt="{{ section.settings.corner_image.alt | default: 'Decorative image' }}"
+        loading="lazy"
+      >
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} ── WATERMARK ── {%- endcomment -%}
+  {%- if section.settings.watermark_text != blank -%}
+    <div class="mc-watermark" aria-hidden="true">
+      {{ section.settings.watermark_text }}
+    </div>
+  {%- endif -%}
+
+  <div class="mc-inner">
+
+    {%- comment -%} LEFT COLUMN {%- endcomment -%}
+    <div class="mc-left">
+
+      {%- comment -%}
+        Heading split by newline.
+        Last line rendered inline with the SHOP NOW button beside it.
+      {%- endcomment -%}
+      {%- assign heading_lines = section.settings.heading | split: '
+' -%}
+
+      <h2 class="mc-heading">
+        {%- for line in heading_lines -%}
+          {%- if forloop.last and section.settings.button_label != blank -%}
+            <span class="mc-heading__last-line">
+              <span class="mc-heading__word">{{ line | strip }}
+                <a href="{{ section.settings.button_link }}" class="mc-btn">
+                {{ section.settings.button_label }}
+              </a>
+              </span>
+            </span>
+          {%- else -%}
+            <span class="mc-heading__line">{{ line | strip }}</span>
+          {%- endif -%}
+        {%- endfor -%}
+      </h2>
+
+      {%- if section.settings.description != blank -%}
+        <p class="mc-desc">{{ section.settings.description }}</p>
+      {%- endif -%}
+
+      {%- comment -%} CATEGORY ICONS {%- endcomment -%}
+      {%- assign icon_blocks = section.blocks | where: 'type', 'food_icon' -%}
+      {%- if icon_blocks.size > 0 -%}
+        <div class="mc-icons">
+          {%- for block in icon_blocks -%}
+            <div
+              class="mc-icon"
+              {{ block.shopify_attributes }}
+              {%- if block.settings.icon_link != blank %}
+                onclick="window.location='{{ block.settings.icon_link }}'"
+                style="cursor:pointer;"
+              {%- endif -%}
+            >
+              {%- if block.settings.icon_image != blank -%}
+                <img
+                  src="{{ block.settings.icon_image | image_url: width: 80 }}"
+                  alt="{{ block.settings.icon_label | default: 'Category' }}"
+                  width="32" height="32"
+                  loading="lazy"
+                >
+              {%- else -%}
+                <span class="mc-icon__fallback">🍽</span>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+    {%- comment -%} END LEFT {%- endcomment -%}
+
+    {%- comment -%} RIGHT IMAGES AREA {%- endcomment -%}
+    <div class="mc-images">
+
+      {%- if section.settings.food_image_top != blank -%}
+        <div class="mc-img mc-img--top"
+          style="
+            width: 210px;
+            height: {{ section.settings.img_top_size }}px;
+            top:    {{ section.settings.img_top_y }}px;
+            right:  {{ section.settings.img_top_x }}px;
+          "
+        >
+          <img
+            src="{{ section.settings.food_image_top | image_url: width: 400 }}"
+            alt="{{ section.settings.food_image_top.alt | default: 'Food bowl' }}"
+            loading="lazy"
+          >
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.food_image_middle != blank -%}
+        <div class="mc-img mc-img--mid"
+          style="
+            width:  {{ section.settings.img_mid_size }}px;
+            height: {{ section.settings.img_mid_size }}px;
+            top:    {{ section.settings.img_mid_y }}px;
+            right:  {{ section.settings.img_mid_x }}px;
+          "
+        >
+          <img
+            src="{{ section.settings.food_image_middle | image_url: width: 400 }}"
+            alt="{{ section.settings.food_image_middle.alt | default: 'Food bowl' }}"
+            loading="lazy"
+          >
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.food_image_large != blank -%}
+        <div class="mc-img mc-img--large"
+          style="
+            width:  {{ section.settings.img_large_size }}px;
+            height: {{ section.settings.img_large_size }}px;
+            top:    {{ section.settings.img_large_y }}px;
+            right:  {{ section.settings.img_large_x }}px;
+          "
+        >
+          <img
+            src="{{ section.settings.food_image_large | image_url: width: 800 }}"
+            alt="{{ section.settings.food_image_large.alt | default: 'Main dish' }}"
+            loading="lazy"
+          >
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_dot -%}
+        <span class="mc-dot"
+          style="
+            top:    {{ section.settings.dot_y }}px;
+            right:  {{ section.settings.dot_x }}px;
+            width:  {{ section.settings.dot_size }}px;
+            height: {{ section.settings.dot_size }}px;
+          "
+        ></span>
+      {%- endif -%}
+
+    </div>
+    {%- comment -%} END RIGHT {%- endcomment -%}
+
+  </div>
+</div>
+</section>
+
+<style>
+/* ================================================================
+   SECTION
+================================================================ */
+#mc-{{ section.id }} {
+  background-color: var(--mc-bg, #e8e8e8);
+  position: relative;
+  overflow: hidden;
+  padding-top: var(--mc-pt, 50px);
+  padding-bottom: 80px;
+  padding-left: clamp(20px, 5%, 80px);
+  padding-right: 0;
+}
+.tji_wd {
+    max-width: 1400px;
+    margin-inline: auto;
+}
+/* ================================================================
+   INNER ROW
+================================================================ */
+#mc-{{ section.id }} .mc-inner {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  z-index: 3;
+  min-height: var(--mc-height, 460px);
+}
+
+/* ================================================================
+   LEFT COLUMN
+================================================================ */
+#mc-{{ section.id }} .mc-left {
+  flex: 0 0 auto;
+  width: clamp(280px, 40%, 500px);
+  padding-right: 24px;
+  padding-bottom: 130px;
+  position: relative;
+  z-index: 4;
+}
+
+/* ── HEADING ── */
+#mc-{{ section.id }} .mc-heading {
+  {% comment %} font-family: '{{ section.settings.heading_font_family }}', 'Arial Black', Impact, sans-serif; {% endcomment %}
+  font-family: "Antonio", sans-serif;
+  font-size: var(--mc-h-size, 64px);
+  text-transform: uppercase;
+  color: var(--mc-heading, #111);
+  margin: 0 0 18px 0;
+  letter-spacing: -1.5px;
+  width: 100%;
+  max-width: 330px;
+}
+
+#mc-{{ section.id }} .mc-heading__line {
+  display: block;
+}
+
+/* Last line: word + button inline */
+#mc-{{ section.id }} .mc-heading__last-line {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: nowrap;
+}
+
+{% comment %} #mc-{{ section.id }} .mc-heading__word {
+  display: inline-block;
+  white-space: nowrap;
+} {% endcomment %}
+
+/* ── BUTTON ── */
+#mc-{{ section.id }} .mc-btn {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  background-color: var(--mc-btn-bg, #111);
+  color: var(--mc-btn-text, #fff);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 11px 22px;
+  border-radius: 30px;
+  text-decoration: none;
+  transform: translateY(5px);
+  white-space: nowrap;
+  transition: opacity .2s, transform .2s;
+  position: relative;
+  bottom: 15px;
+}
+
+{% comment %} #mc-{{ section.id }} .mc-btn:hover {
+  opacity: 0.82;
+  transform: translateY(3px);
+} {% endcomment %}
+
+/* ── DESCRIPTION ── */
+#mc-{{ section.id }} .mc-desc {
+  font-weight:600 !important;
+  font-size: var(--mc-d-size, 14px);
+  color: var(--mc-text, #444);
+  line-height: 1.65;
+  margin: 18px 0 26px;
+  max-width: 420px;
+  
+}
+
+/* ── ICONS ── */
+#mc-{{ section.id }} .mc-icons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+#mc-{{ section.id }} .mc-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: transform .2s, box-shadow .2s;
+}
+
+#mc-{{ section.id }} .mc-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 16px rgba(0,0,0,.13);
+}
+
+#mc-{{ section.id }} .mc-icon img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+#mc-{{ section.id }} .mc-icon__fallback {
+  font-size: 18px;
+  opacity: .5;
+}
+
+/* ================================================================
+   RIGHT IMAGES
+================================================================ */
+#mc-{{ section.id }} .mc-images {
+  flex: 1;
+  position: relative;
+  min-height: var(--mc-height, 460px);
+  overflow: visible;
+}
+
+#mc-{{ section.id }} .mc-img {
+  position: absolute;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+#mc-{{ section.id }} .mc-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+#mc-{{ section.id }} .mc-img--large { z-index: 2; }
+#mc-{{ section.id }} .mc-img--top   { z-index: 3; }
+#mc-{{ section.id }} .mc-img--mid   { z-index: 3; }
+
+/* ── ORANGE DOT ── */
+#mc-{{ section.id }} .mc-dot {
+  display: none;
+  position: absolute;
+  border-radius: 50%;
+  background: var(--mc-dot-color, #e8714a);
+  z-index: 5;
+  display: block;
+}
+
+/* ================================================================
+   CORNER IMAGE (bottom-left)
+================================================================ */
+#mc-{{ section.id }} .mc-corner {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+}
+
+#mc-{{ section.id }} .mc-corner img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* ================================================================
+   WATERMARK
+================================================================ */
+#mc-{{ section.id }} .mc-watermark {
+  position: absolute;
+  bottom: 85px;
+  left: 0;
+  width: 100%;
+  {% comment %} font-family: '{{ section.settings.heading_font_family }}', 'Arial Black', Impact, sans-serif; {% endcomment %}
+  font-family: "Antonio", sans-serif;
+  font-size: 180px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  color: #ffffff;
+  letter-spacing: -1px;
+  white-space: nowrap;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  transform: translateY(45%);
+}
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+@media (max-width: 960px) {
+  #mc-{{ section.id }} .mc-left { width: 44%; }
+}
+
+@media (max-width: 767px) {
+  #mc-{{ section.id }} { padding-left: 18px; overflow: hidden; }
+  #mc-{{ section.id }} .mc-inner { flex-direction: column; min-height: unset; }
+  #mc-{{ section.id }} .mc-left { width: 100%; padding-bottom: 20px; text-align: center; }
+  #mc-{{ section.id }} .mc-heading { font-size: calc(var(--mc-h-size,64px) * 0.55); line-height: 1.5; }
+  #mc-{{ section.id }} .mc-heading__last-line { gap: 8px; }
+  #mc-{{ section.id }} .mc-images { width: 100%; min-height: 280px; }
+  #mc-{{ section.id }} .mc-icons { flex-wrap: wrap; justify-content: center; }
+  #mc-{{ section.id }} .mc-watermark { transform: translateY(30%); font-size: 44px; }
+  #mc-{{ section.id }} .mc-corner { width: 80px !important; bottom: 5px !important; left: 25px !important; }
+  #mc-{{ section.id }} .mc-img { width: 135px !important; height: 155px !important; top: 40px !important; }
+  .mc-img.mc-img--top { right: 145px !important; top: 30px !important;}
+  .mc-img.mc-img--mid { right: 280px !important; }
+  .mc-img.mc-img--large { right: 15px !important; }
+  #mc-{{ section.id }} .mc-icon { width: 48px; height: 48px; }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Every Meal Covered",
+  "tag": "section",
+  "class": "meal-covered-wrapper",
+  "settings": [
+
+    { "type": "header", "content": "── Section Layout ──" },
+    {
+      "type": "range", "id": "section_padding_top",
+      "label": "Padding Top (px)", "min": 0, "max": 140, "step": 4, "default": 52
+    },
+    {
+      "type": "range", "id": "section_min_height",
+      "label": "Min Height (px)", "min": 300, "max": 700, "step": 10, "default": 460
+    },
+
+    { "type": "header", "content": "── Content ──" },
+    {
+      "type": "textarea", "id": "heading",
+      "label": "Heading (new line = new row, last line gets button inline)",
+      "default": "WE'VE GOT\nEVERY MEAL\nCOVERED"
+    },
+    {
+      "type": "text", "id": "button_label",
+      "label": "Button Label", "default": "SHOP NOW"
+    },
+    {
+      "type": "url", "id": "button_link", "label": "Button Link"
+    },
+    {
+      "type": "textarea", "id": "description",
+      "label": "Description",
+      "default": "Every meal deserves a sauce that actually shows up. Whether it's breakfast wraps, lunchtime salads, loaded burgers, pizza nights, rice bowls, tacos, fries, grilled chicken, or the random fridge raid you pretend wasn't a meal, TPCN has every craving covered."
+    },
+    {
+      "type": "text", "id": "watermark_text",
+      "label": "Watermark Text (bottom)", "default": "GO NUTS ON EVERYTHING"
+    },
+
+    { "type": "header", "content": "── Food Images ──" },
+
+    { "type": "paragraph", "content": "🍲 TOP BOWL" },
+    { "type": "image_picker", "id": "food_image_top", "label": "Top Bowl Image" },
+    {
+      "type": "range", "id": "img_top_size",
+      "label": "Top Bowl Size (px)", "min": 100, "max": 300, "step": 5, "default": 195
+    },
+    {
+      "type": "range", "id": "img_top_y",
+      "label": "Top Bowl - Distance from Top (px)", "min": 0, "max": 400, "step": 4, "default": 8
+    },
+    {
+      "type": "range", "id": "img_top_x",
+      "label": "Top Bowl - Distance from Right (px)", "min": 0, "max": 500, "step": 5, "default": 300
+    },
+
+    { "type": "paragraph", "content": "🥗 MIDDLE BOWL" },
+    { "type": "image_picker", "id": "food_image_middle", "label": "Middle Bowl Image" },
+    {
+      "type": "range", "id": "img_mid_size",
+      "label": "Middle Bowl Size (px)", "min": 100, "max": 300, "step": 5, "default": 215
+    },
+    {
+      "type": "range", "id": "img_mid_y",
+      "label": "Middle Bowl - Distance from Top (px)", "min": 0, "max": 400, "step": 4, "default": 188
+    },
+    {
+      "type": "range", "id": "img_mid_x",
+      "label": "Middle Bowl - Distance from Right (px)", "min": 0, "max": 500, "step": 5, "default": 350
+    },
+
+    { "type": "paragraph", "content": "🍕 LARGE DISH" },
+    { "type": "image_picker", "id": "food_image_large", "label": "Large Dish Image (Pizza etc.)" },
+    {
+      "type": "range", "id": "img_large_size",
+      "label": "Large Dish Size (px)", "min": 200, "max": 700, "step": 5, "default": 460
+    },
+    {
+      "type": "range", "id": "img_large_y",
+      "label": "Large Dish - Distance from Top (px)", "min": 0, "max": 200, "step": 4, "default": 0
+    },
+    {
+      "type": "range", "id": "img_large_x",
+      "label": "Large Dish - Distance from Right (px)", "min": 0, "max": 400, "step": 4, "default": 0
+    },
+
+    { "type": "header", "content": "── Decorative Dot ──" },
+    { "type": "checkbox", "id": "show_dot", "label": "Show Dot", "default": true },
+    { "type": "color", "id": "dot_color", "label": "Dot Color", "default": "#e8714a" },
+    {
+      "type": "range", "id": "dot_size",
+      "label": "Dot Size (px)", "min": 6, "max": 30, "step": 1, "default": 14
+    },
+    {
+      "type": "range", "id": "dot_y",
+      "label": "Dot - Distance from Top (px)", "min": 100, "max": 600, "step": 5, "default": 390
+    },
+    {
+      "type": "range", "id": "dot_x",
+      "label": "Dot - Distance from Right (px)", "min": 50, "max": 550, "step": 5, "default": 375
+    },
+
+    { "type": "header", "content": "── Bottom-Left Corner Image ──" },
+    {
+      "type": "image_picker", "id": "corner_image",
+      "label": "Corner Image (e.g. pecan / nut / garnish)"
+    },
+    {
+      "type": "range", "id": "corner_image_width",
+      "label": "Corner Image Width (px)", "min": 40, "max": 300, "step": 5, "default": 115
+    },
+    {
+      "type": "range", "id": "corner_image_bottom",
+      "label": "Corner Image - Distance from Bottom (px)", "min": -100, "max": 100, "step": 2, "default": 0
+    },
+    {
+      "type": "range", "id": "corner_image_left",
+      "label": "Corner Image - Distance from Left (px)", "min": 0, "max": 300, "step": 3, "default": 0
+    },
+
+    { "type": "header", "content": "── Typography ──" },
+    {
+      "type": "text", "id": "heading_font_family",
+      "label": "Heading Font (CSS name)", "default": "Arial Black"
+    },
+    {
+      "type": "range", "id": "heading_font_size",
+      "label": "Heading Font Size (px)", "min": 28, "max": 110, "step": 2, "default": 64
+    },
+    {
+      "type": "range", "id": "description_font_size",
+      "label": "Description Font Size (px)", "min": 11, "max": 22, "step": 1, "default": 14
+    },
+
+    { "type": "header", "content": "── Colors ──" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#e8e8e8" },
+    { "type": "color", "id": "heading_color", "label": "Heading Color", "default": "#111111" },
+    { "type": "color", "id": "text_color", "label": "Description Color", "default": "#444444" },
+    { "type": "color", "id": "button_bg_color", "label": "Button Background", "default": "#111111" },
+    { "type": "color", "id": "button_text_color", "label": "Button Text", "default": "#ffffff" },
+    { "type": "color", "id": "watermark_color", "label": "Watermark Color", "default": "#00000015" }
+
+  ],
+  "blocks": [
+    {
+      "type": "food_icon",
+      "name": "Category Icon",
+      "limit": 8,
+      "settings": [
+        { "type": "image_picker", "id": "icon_image", "label": "Icon Image" },
+        {
+          "type": "text", "id": "icon_label",
+          "label": "Alt Text / Label", "default": "Food Category"
+        },
+        { "type": "url", "id": "icon_link", "label": "Icon Link (optional)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Every Meal Covered",
+      "blocks": [
+        { "type": "food_icon" },
+        { "type": "food_icon" },
+        { "type": "food_icon" },
+        { "type": "food_icon" },
+        { "type": "food_icon" },
+        { "type": "food_icon" }
+      ]
+    }
+  ]
+}
+{% endschema %}
