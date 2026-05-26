@@ -1,0 +1,116 @@
+<div class="announcement-bar aa">
+  <div class="announcement-track">
+    <div class="announcement-group">
+      <span>{{ section.settings.text }}</span>
+      <span>{{ section.settings.text }}</span>
+      <span>{{ section.settings.text }}</span>
+    </div>
+    <div class="announcement-group">
+      <span>{{ section.settings.text }}</span>
+      <span>{{ section.settings.text }}</span>
+      <span>{{ section.settings.text }}</span>
+    </div>
+  </div>
+</div>
+
+<style>
+.announcement-bar {
+  width: 100%;
+  background: {{ section.settings.bg_color }};
+  color: {{ section.settings.text_color }};
+  overflow: hidden;
+  padding: 10px 0;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: {{ section.settings.text_transform }};
+}
+
+.announcement-track {
+  display: flex;
+  width: max-content;
+  animation: seamlessScroll {{ section.settings.speed }}s linear infinite;
+  will-change: transform;
+}
+
+.announcement-group {
+  display: flex;
+}
+
+.announcement-group span {
+  padding-right: 5px;
+  white-space: nowrap;
+  font-family: "Antonio", sans-serif;
+  font-weight: 700;
+  font-size: {{ section.settings.font_size }}px;
+}
+
+@keyframes seamlessScroll {
+  0% {
+    transform: translateX(-10%);
+  }
+  100% {
+    transform: translateX(-60%);
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Custom Announcement Bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Announcement Text",
+      "default": "BUY 2 BOTTLES GET 1 FREE - BUY 2 BOTTLES GET 1 FREE -"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#2d2d2d"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#cfcfcf"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll Speed (seconds)",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Text Size",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "Text Transform",
+      "default": "uppercase",
+      "options": [
+        { "value": "uppercase", "label": "UPPERCASE" },
+        { "value": "lowercase", "label": "LOWERCASE" },
+        { "value": "capitalize", "label": "CAPITALIZE" },
+        { "value": "none", "label": "NORMAL" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Announcement Bar"
+    }
+  ]
+}
+{% endschema %}
