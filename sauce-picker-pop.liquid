@@ -1,0 +1,490 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  /* Font & Container Setup */
+  .sauce-picker-container { 
+    max-width: 1400px; 
+    margin: 0 auto; 
+    padding: 0 1.5rem; 
+    font-family: 'Impact', 'Anton', sans-serif; 
+  }
+  
+  .sauce-picker-title { 
+    text-align: center; 
+    font-size: 64px; 
+    margin-bottom: 3rem; 
+    text-transform: uppercase; 
+    color: #1c252c; 
+  }
+
+  /* Main Grid Layout */
+  .sauce-grid-layout { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+ 
+  .sauce-card-item {
+    background: #ffffff; 
+    border-radius: 40px; 
+    padding: 45px 25px; 
+    flex: 1 1 calc(25% - 20px);
+    min-width: 280px; 
+    max-width: 320px; 
+    text-align: center; 
+    display: flex; 
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.04); 
+    position: relative;
+  }
+
+  .sauce-card-title {  
+    font-size: 24px;
+    margin: 0; 
+    text-transform: uppercase; 
+    color: #1c252c; 
+    /* font-family: 'Anton'; */
+  }
+  
+  .sauce-card-item .sauce-card-desc { 
+    font-size: 0.95rem; 
+    color: #333; 
+    margin: 10px 0 0px; 
+    min-height: 55px; 
+    line-height: 1.3; 
+    font-family: "Hanken Grotesk", sans-serif !important;
+    /* font-family: Arial, sans-serif;  */
+  }
+
+  /* Image & Watermark Logic */
+  .sauce-img-wrapper { 
+    position: relative; 
+    height: 300px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    margin-bottom: 25px; 
+  }
+  
+  .sauce-bg-watermark {
+    position: absolute;
+    font-size: 190px;
+    font-weight: 700;
+    color: #f2f2f2;
+    z-index: 1;
+    pointer-events: none;
+    text-transform: uppercase;
+    font-family: "Antonio", sans-serif;
+    line-height: 1;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    opacity: 0.8;
+  }
+  #PopRightBG  .sauce-bg-watermark {
+    display:none;
+  }
+  
+  .sauce-main-img { 
+    max-height: 100%; 
+    width: auto; 
+    z-index: 2; 
+    transition: transform 0.4s ease; 
+    position: relative;
+  }
+
+  
+  /* Trigger Button */
+  .sauce-popup-trigger {
+    position: absolute; 
+    right: -40px; 
+    top: 50%; 
+    transform: translateY(-50%);
+    width: 40px; 
+    height: 40px; 
+    background: #fff; 
+    border-radius: 50%; 
+    border: none;
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    z-index: 7; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+    color: #1c252c;
+  }
+
+  .sauce-shop-button {
+
+    font-size: 24px !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    background: #1c252c; 
+    text-decoration: none; 
+    padding: 14px 40px;
+ 
+    border-radius: 50px; 
+    margin-top: auto; 
+    display: inline-block; 
+    /* font-size: 1.1rem; */
+    text-transform: uppercase;
+    font-family: "Antonio", sans-serif;
+    letter-spacing: 1px;
+    transition: 0.3s;
+    width: fit-content;
+    margin: auto;
+  }
+
+  /* --- POPUP (MODAL) STYLING --- */
+  .sauce-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 9999; 
+    left: 0; 
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.7);
+    align-items: center; 
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .sauce-modal-content {
+    background: #fff; 
+    border-radius: 50px; 
+    width: 100%; 
+    max-width: 1150px;
+    position: relative; 
+    overflow: hidden; 
+    display: flex; 
+    min-height: 600px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+  }
+
+  .modal-close-arrow {
+    position: absolute; 
+    right: 0px; 
+    top: 50%; 
+    transform: translateY(-50%);
+    width: 45px; 
+    height: 45px; 
+    background: #fff; 
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    cursor: pointer; 
+    z-index: 100; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 20px; 
+    color: #333;
+  }
+
+  .modal-left-side { 
+    flex: 1.3; 
+    background: #f9f9f9; 
+    display: flex; 
+    flex-direction: column; 
+  }
+  
+  .modal-left-side h2 {
+    padding: 30px 0 0 30px;
+    font-size: 32px;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    color: #1c252c;
+    /* font-family: 'Anton'; */
+   }
+  
+  .tasting-img-box { 
+    flex: 1; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    position: relative;
+  }
+  
+  .tasting-img-box img { 
+    max-width: 100%; 
+    max-height: 450px; 
+    object-fit: contain; 
+  }
+
+  /* Tasting Badges */
+  .tasting-badge {
+    position: absolute;
+    background: rgba(50, 50, 50, 0.50);
+    color: #fff;
+    font-family: "Antonio", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    border-radius: 50px;
+    white-space: nowrap;
+    pointer-events: none;
+    display: none;
+  }
+
+  .tasting-badge.badge-visible {
+    display: block;
+  }
+
+  .modal-right-side {
+    flex: 1; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    background-size: cover; 
+    position: relative; 
+    padding: 40px;
+  }
+
+  .modal-product-card {
+    background: #fff; 
+    border-radius: 40px; 
+    padding: 40px 30px; 
+    text-align: center;
+    width: 100%; 
+    max-width: 340px; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15); 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    z-index: 5;
+  }
+
+  /* Popup Specific Watermark Adjustments */
+  .modal-product-card .sauce-bg-watermark {
+    font-family: "Antonio", sans-serif;
+    font-size: 192px; /* Bada size for popup */
+    color: #f2f2f2;
+    opacity: 1;
+    z-index: 1;
+  }
+/* ts add css */
+
+  #PopDesc {
+      color: #838f9f;
+      font-size: 15px;
+      font-size: 15px !important;
+      font-weight: 600;
+    }
+    strong.product-text {
+       color: #838f9f;
+    }
+/* end ts css */
+  @media screen and (max-width: 850px) {
+    .sauce-modal-content { flex-direction: column; overflow-y: auto; height: 90vh; border-radius: 30px; }
+    .modal-close-arrow { top: 20px; right: 20px; transform: none; }
+    .modal-left-side, .modal-right-side { flex: none; width: 100%; padding: 30px 20px; }
+     .modal-product-card .sauce-bg-watermark {
+      font-family: "Antonio", sans-serif;
+      font-size: 176px;
+      color: #f2f2f2;
+      opacity: 1;
+      z-index: 1;
+    }
+  }
+{%- endstyle -%}
+
+<section class="section-{{ section.id }}-padding">
+  <div class="sauce-picker-container">
+    <h2 class="sauce-picker-title">{{ section.settings.heading }}</h2>
+    <div class="sauce-grid-layout">
+      {% for block in section.blocks %}
+        {%- assign product = block.settings.product -%}
+        {%- assign card_img = block.settings.custom_image | default: product.featured_image -%}
+
+        {%- comment -%} Build badge JSON for this block {%- endcomment -%}
+        {%- assign badges_json = '[' -%}
+        {%- if block.settings.badge1_text != blank -%}
+          {%- assign b1 = '{"text":"' | append: block.settings.badge1_text | append: '","x":"' | append: block.settings.badge1_x | append: '","y":"' | append: block.settings.badge1_y | append: '"}' -%}
+          {%- assign badges_json = badges_json | append: b1 -%}
+        {%- endif -%}
+        {%- if block.settings.badge2_text != blank -%}
+          {%- if block.settings.badge1_text != blank -%}{%- assign badges_json = badges_json | append: ',' -%}{%- endif -%}
+          {%- assign b2 = '{"text":"' | append: block.settings.badge2_text | append: '","x":"' | append: block.settings.badge2_x | append: '","y":"' | append: block.settings.badge2_y | append: '"}' -%}
+          {%- assign badges_json = badges_json | append: b2 -%}
+        {%- endif -%}
+        {%- if block.settings.badge3_text != blank -%}
+          {%- unless block.settings.badge1_text == blank and block.settings.badge2_text == blank -%}{%- assign badges_json = badges_json | append: ',' -%}{%- endunless -%}
+          {%- assign b3 = '{"text":"' | append: block.settings.badge3_text | append: '","x":"' | append: block.settings.badge3_x | append: '","y":"' | append: block.settings.badge3_y | append: '"}' -%}
+          {%- assign badges_json = badges_json | append: b3 -%}
+        {%- endif -%}
+        {%- assign badges_json = badges_json | append: ']' -%}
+        
+        <div class="sauce-card-item">
+          <h3 class="sauce-card-title">{{ block.settings.custom_title | default: product.title }}</h3>
+          <p class="sauce-card-desc"><strong class="product-text">{{ block.settings.custom_desc | default: product.description | strip_html | truncate: 80 }}</strong></p>
+          
+          <div class="sauce-img-wrapper">
+            <span class="sauce-bg-watermark">{{ block.settings.watermark }}</span>
+            <img src="{{ card_img | image_url: width: 500 }}" class="sauce-main-img" alt="{{ product.title }}" loading="lazy">
+
+            <button class="sauce-popup-trigger" 
+              data-title="{{ block.settings.custom_title | default: product.title | escape }}" 
+              data-desc="{{ block.settings.custom_desc | default: product.description | strip_html | escape }}"
+              data-img="{{ card_img | image_url: width: 500 }}"
+              data-url="{{ product.url }}"
+              data-tasting="{{ block.settings.tasting_image | image_url: width: 800 }}"
+              data-bg="{{ block.settings.popup_bg_img | image_url: width: 1000 }}"
+              data-watermark="{{ block.settings.watermark }}"
+              data-badges="{{ badges_json | escape }}"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+          <a href="{{ product.url }}" class="sauce-shop-button">SHOP NOW</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<div id="SauceModal" class="sauce-modal">
+  <div class="sauce-modal-content">
+    <div class="modal-close-arrow">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </div>
+    
+    <div class="modal-left-side">
+      <h2>TASTING NOTES</h2>
+      <div class="tasting-img-box">
+        <img id="PopTastingImg" src="" alt="Tasting Notes">
+        <span id="PopBadge1" class="tasting-badge"></span>
+        <span id="PopBadge2" class="tasting-badge"></span>
+        <span id="PopBadge3" class="tasting-badge"></span>
+      </div>
+    </div>
+
+    <div class="modal-right-side" id="PopRightBG">
+      <div class="modal-product-card">
+          <h3 id="PopTitle" class="sauce-card-title" style="margin-bottom: 10px;"></h3>
+          <p id="PopDesc" style="margin-bottom: 20px;  font-family: Arial; font-size: 14px;"></p>
+          
+          <div class="sauce-img-wrapper" style="height: 250px; width: 100%; margin-bottom: 20px;">
+            <span id="PopWatermark" class="sauce-bg-watermark"></span>
+            <img id="PopProductImg" src="" class="sauce-main-img" alt="Product Image">
+          </div>
+          
+          <a id="PopUrl" href="#" class="sauce-shop-button">SHOP NOW</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById("SauceModal");
+  const closeArrow = document.querySelector(".modal-close-arrow");
+  const triggers = document.querySelectorAll(".sauce-popup-trigger");
+
+  const badgeEls = [
+    document.getElementById("PopBadge1"),
+    document.getElementById("PopBadge2"),
+    document.getElementById("PopBadge3")
+  ];
+
+  function updateBadges(badgesData) {
+    let badges = [];
+    try { badges = JSON.parse(badgesData || '[]'); } catch(e) { badges = []; }
+
+    badgeEls.forEach(function(el, i) {
+      const badge = badges[i];
+      if (badge && badge.text) {
+        el.innerText = badge.text;
+        el.style.left = (badge.x || '50') + '%';
+        el.style.top = (badge.y || '50') + '%';
+        el.style.transform = 'translate(-50%, -50%)';
+        el.classList.add('badge-visible');
+      } else {
+        el.innerText = '';
+        el.classList.remove('badge-visible');
+      }
+    });
+  }
+
+  triggers.forEach(function(trigger) {
+    trigger.addEventListener('click', function() {
+      const title = this.getAttribute('data-title');
+      const desc = this.getAttribute('data-desc');
+      const pImg = this.getAttribute('data-img');
+      const tImg = this.getAttribute('data-tasting');
+      const bgImg = this.getAttribute('data-bg');
+      const url = this.getAttribute('data-url');
+      const watermark = this.getAttribute('data-watermark');
+      const badgesData = this.getAttribute('data-badges');
+
+      document.getElementById("PopTitle").innerText = title;
+      document.getElementById("PopDesc").innerText = desc;
+      document.getElementById("PopProductImg").src = pImg;
+      document.getElementById("PopTastingImg").src = tImg;
+      document.getElementById("PopUrl").href = url;
+      
+      const popWatermark = document.getElementById("PopWatermark");
+      popWatermark.innerText = watermark || "";
+      
+      const rightSide = document.getElementById("PopRightBG");
+      if(bgImg) {
+        rightSide.style.backgroundImage = `url('${bgImg}')`;
+      }
+
+      updateBadges(badgesData);
+
+      modal.style.display = "flex";
+      document.body.style.overflow = 'hidden'; 
+    });
+  });
+
+  const hideModal = function() {
+    modal.style.display = "none";
+    document.body.style.overflow = 'auto'; 
+  };
+
+  closeArrow.onclick = hideModal;
+  window.onclick = function(e) { if (e.target == modal) hideModal(); };
+});
+</script>
+
+{% schema %}
+{
+  "name": "Full Dynamic Sauce Picker",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "PICK YOUR SAUCE" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f0f2f5" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Top Padding", "default": 60 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Bottom Padding", "default": 60 }
+  ],
+  "blocks": [
+    {
+      "type": "product_block",
+      "name": "Product",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Select Product" },
+        { "type": "text", "id": "custom_title", "label": "Custom Title" },
+        { "type": "textarea", "id": "custom_desc", "label": "Custom Description" },
+        { "type": "image_picker", "id": "custom_image", "label": "Bottle Image" },
+        { "type": "text", "id": "watermark", "label": "Watermark (e.g. NUTS)", "default": "NUTS" },
+        { "type": "header", "content": "Popup Content" },
+        { "type": "image_picker", "id": "tasting_image", "label": "Tasting Notes Image (Left)" },
+        { "type": "image_picker", "id": "popup_bg_img", "label": "Popup Texture Background (Right)" },
+        { "type": "header", "content": "Tasting Badges (on image)" },
+        { "type": "text", "id": "badge1_text", "label": "Badge 1 Text", "default": "SMOKY & EARTHY" },
+        { "type": "range", "id": "badge1_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Badge 1 — Left Position (%)", "default": 65 },
+        { "type": "range", "id": "badge1_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Badge 1 — Top Position (%)", "default": 25 },
+        { "type": "text", "id": "badge2_text", "label": "Badge 2 Text", "default": "CHARRED" },
+        { "type": "range", "id": "badge2_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Badge 2 — Left Position (%)", "default": 28 },
+        { "type": "range", "id": "badge2_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Badge 2 — Top Position (%)", "default": 55 },
+        { "type": "text", "id": "badge3_text", "label": "Badge 3 Text", "default": "EARTHY" },
+        { "type": "range", "id": "badge3_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Badge 3 — Left Position (%)", "default": 40 },
+        { "type": "range", "id": "badge3_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Badge 3 — Top Position (%)", "default": 80 }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Full Dynamic Sauce Picker" }]
+}
+{% endschema %}
