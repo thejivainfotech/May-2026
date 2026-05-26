@@ -1,0 +1,258 @@
+<div class="text-with-video section-{{ section.id }}">
+  <div class="twv-container">
+    
+    <div class="twv-content">
+      {% if section.settings.title != blank %}
+        <h2 class="twv-title">{{ section.settings.title }}</h2>
+      {% endif %}
+      
+      {% if section.settings.subtext != blank %}
+        <div class="twv-subtext">
+          {{ section.settings.subtext }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a href="{{ section.settings.button_link }}" class="twv-button">
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="twv-media-wrapper">
+      <div class="twv-video-frame">
+        {% if section.settings.video_media != blank %}
+          {{ section.settings.video_media | video_tag: autoplay: true, loop: true, muted: true, controls: false, playsinline: true, class: 'twv-media-obj' }}
+        {% elsif section.settings.image != blank %}
+          <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.image.alt }}" class="twv-media-obj">
+          
+          <div class="twv-play-overlay">
+             <svg viewBox="0 0 100 100" class="play-icon" width="40" height="40">
+               <path d="M40 35v30l25-15z" fill="white"></path>
+             </svg>
+          </div>
+        {% else %}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg twv-media-obj' }}
+        {% endif %}
+      </div>
+
+      {% if section.settings.floating_image != blank %}
+        <div class="floating-pista-element">
+          <img src="{{ section.settings.floating_image | img_url: '400x' }}" alt="Floating Element">
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<style>
+.section-{{ section.id }} {
+  background-color: {{ section.settings.bg_color }};
+  padding: 80px 20px;
+  overflow: visible;
+}
+
+.twv-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  position: relative;
+}
+
+.twv-content { flex: 1; }
+
+.twv-title {
+  font-size: 64px;
+  text-transform: uppercase;
+  line-height: 1.05;
+  color: #1a1a1a;
+  margin-bottom: 25px;
+}
+
+.twv-subtext {
+    font-size: 1.2rem;
+    color: #838f9f;
+    max-width: 480px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.twv-button {
+    background: #1a1a1a;
+    color: #ffffff;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 50px;
+    display: inline-block;
+    transition: all 0.3s ease;
+    font-family: "Antonio", sans-serif;
+    font-size: 20px;
+}
+
+.twv-media-wrapper {
+  flex: 1.4;
+  position: relative;
+}
+
+.twv-video-frame {
+  border: 18px solid #e1d9d1;
+  border-radius: 50px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 1.6 / 1;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  background: #000;
+}
+
+.twv-media-obj {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.twv-play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Floating Image Style - Animation Hata Di Hai */
+.floating-pista-element {
+  position: absolute;
+  z-index: 10;
+  width: {{ section.settings.pista_size }}px;
+  bottom: {{ section.settings.pista_bottom }}%;
+  right: {{ section.settings.pista_right }}%;
+  /* Sirf positioning ke liye transform */
+  transform: translate(30%, 30%); 
+}
+
+.floating-pista-element img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15));
+}
+
+@media (max-width: 991px) {
+ .section-{{ section.id }} {
+    padding: 20px;
+ }
+  .twv-container {
+    flex-direction: column-reverse;
+    text-align: center;
+    gap: 40px;
+ }
+  .twv-title { font-size: 2.5rem; }
+  .twv-video-frame { border-width: 10px; border-radius: 30px; }
+  .floating-pista-element { 
+    width: 100px; 
+    transform: translate(1, 0); /* Mobile par shift control karne ke liye */
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "Text with Video",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f3f3f3"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Heading",
+      "default": "ENJOY NATURAL NUT OILS AND SAY BYE TO SEED OILS"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "<p>TPCN's mission is to extract the beneficial protein, fiber, vitamins, and micronutrients found in nuts.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "video",
+      "id": "video_media",
+      "label": "Select Video from Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Fallback Image (Show Play Button)"
+    },
+    {
+      "type": "header",
+      "content": "Floating Element Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "floating_image",
+      "label": "Floating Image (Pista)"
+    },
+    {
+      "type": "range",
+      "id": "pista_size",
+      "min": 50,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Size",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "pista_bottom",
+      "min": -50,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "label": "Position: Bottom Offset",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "pista_right",
+      "min": -50,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "label": "Position: Right Offset",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text with Video"
+    }
+  ]
+}
+{% endschema %}
