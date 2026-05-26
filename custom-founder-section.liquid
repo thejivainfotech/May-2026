@@ -1,0 +1,191 @@
+{%- style -%}
+  .founder-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding: 100px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 200px;
+    max-width: 1400px;
+    margin: auto;
+  }
+  .founder-content-{{ section.id }} {
+    flex: 1;
+    color: #333;
+    font-family: sans-serif;
+  }
+  .founder-content-{{ section.id }} h3 {
+    font-size: 46px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #838f9f;
+  }
+  .founder-btn-{{ section.id }} {
+    background: #000;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 16px;
+    text-decoration: none;
+    font-family: "Antonio", sans-serif;
+  }
+  .founder-content-{{ section.id }} h2 {
+    font-size: 46px;
+    line-height: 1.2;
+    margin-top: 0px;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+  }
+
+  .founder-signature-template--19084543656041__custom_founder_section_HBLhte span {
+    font-weight: 600;
+}
+  .founder-text-{{ section.id }} p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: #838f9f;
+  }
+  .founder-signature-{{ section.id }} {
+    margin-top: 30px;
+    font-size: 18px;
+    font-family: "Hanken Grotesk", sans-serif;
+    color: #838f9f;
+  }
+  .founder-signature-{{ section.id }} img {
+    max-width: 150px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .founder-media-{{ section.id }} {
+    flex: 1;
+    max-width: 450px;
+    position: relative;
+  }
+  .founder-media-{{ section.id }} img, .founder-media-{{ section.id }} video {
+    width: 100%;
+    border-radius: 40px;
+    border: 15px solid #d1d1d1; /* Outer frame look */
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .founder-section-{{ section.id }} {
+      flex-direction: column-reverse;
+      text-align: center;
+      gap: 50px;
+    }
+    .founder-content-{{ section.id }} h3 {
+      justify-content: center;
+    }
+  }
+{%- endstyle -%}
+
+<div class="founder-section-{{ section.id }} container" id="cus_who-dis">
+  <div class="founder-content-{{ section.id }}">
+    <h3>
+      {{ section.settings.subheading }}
+      {% if section.settings.button_label != blank %}
+        <a href="{{ section.settings.button_link }}" class="founder-btn-{{ section.id }}">{{ section.settings.button_label }}</a>
+      {% endif %}
+    </h3>
+    <h2>{{ section.settings.heading }}</h2>
+    
+    <div class="founder-text-{{ section.id }}">
+      {{ section.settings.description }}
+    </div>
+
+    <div class="founder-signature-{{ section.id }}">
+      {% comment %} <span>Sincerely</span> {% endcomment %}
+       {% comment %} <span style="
+    font-family: &quot;Antonio&quot;, sans-serif;
+">Sincerely</span> {% endcomment %}
+      {% if section.settings.signature_image != blank %}
+        <img src="{{ section.settings.signature_image | img_url: 'master' }}" alt="Signature">
+      {% else %}
+        <strong>{{ section.settings.founder_name }}</strong>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="founder-media-{{ section.id }}">
+    {% if section.settings.video_url != blank %}
+       {{ section.settings.video_url | video_tag: autoplay: true, loop: true, muted: true, controls: true }}
+    {% elsif section.settings.image != blank %}
+      <img src="{{ section.settings.image | img_url: '800x' }}" alt="Founder Image">
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Founder Story Section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f3f4f6"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "HEY, I'M BRANDON."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "I ANALYSED OVER 500 SAUCES..."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Over the course of my extensive research...</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "signature_image",
+      "label": "Signature Image"
+    },
+    {
+      "type": "text",
+      "id": "founder_name",
+      "label": "Founder Name (Fallback)",
+      "default": "BRANDON - FOUNDER"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Cover Image"
+    },
+    {
+      "type": "video",
+      "id": "video_url",
+      "label": "Video"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Founder Story Section"
+    }
+  ]
+}
+{% endschema %}
