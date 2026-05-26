@@ -1,0 +1,237 @@
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background-color: #eff1f3;
+  }
+
+  .showcase-wrapper-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    border-radius: 40px;
+    overflow: hidden;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    {% if section.settings.bg_image != blank %}
+      background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url('{{ section.settings.bg_image | image_url: width: 2000 }}');
+    {% else %}
+      background-color: #e5e5e5;
+    {% endif %}
+  }
+
+  .showcase-container {
+    display: grid;
+    grid-template-columns: 1.1fr 1.5fr;
+    width: 100%;
+    padding: 10px 60px 0px 70px;
+    align-items: center;
+    gap: 540px;
+  }
+
+  .product-image-side {
+    display: flex;
+    position: relative;
+  }
+
+  .product-image-side img {
+    max-height: 550px;
+    width: auto;
+    filter: drop-shadow(0 20px 30px rgba(0,0,0,0.2));
+  }
+
+  .content-side {
+    color: #ffffff;
+    text-align: right;
+  }
+
+ .showcase-heading {
+    font-size: 76px;
+    line-height: 1;
+    text-transform: uppercase;
+    margin: 0 0 20px 0;
+    color: #ffffff;
+    /* font-family: 'Anton'; */
+}
+
+  .showcase-subtext {
+    font-size: 18px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-bottom: 30px;
+    line-height: 1.25;
+    color: {{ section.settings.text_color }};
+    font-family: "Hanken Grotesk", sans-serif;
+    font-weight: 700;
+  }
+
+  .capsule-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 15px;
+  }
+
+  .info-capsule {
+    border: 1.5px solid {{ section.settings.text_color | color_modify: 'alpha', 0.5 }};
+    padding: 12px 25px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    font-family: "Antonio", sans-serif;
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    width: 100%;
+    max-width: 165px;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 990px) {
+    .showcase-container {
+      grid-template-columns: 1fr;
+      text-align: center;
+      padding: 40px 20px;
+      gap: 0px;
+      display: flex;
+      flex-direction: column-reverse;
+    }
+    .content-side {
+      text-align: center;
+    }
+    .showcase-subtext {
+      margin: 0 auto 30px auto;
+    }
+    .capsule-grid {
+      justify-content: center;
+    }
+    .product-image-side img {
+        max-height: 400px;
+    }
+    .product-image-side {
+      justify-content: center;
+    }
+  }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding">
+  <div class="showcase-wrapper-{{ section.id }}">
+    <div class="showcase-container">
+      
+      <div class="product-image-side">
+        {% if section.settings.product_image != blank %}
+          <img src="{{ section.settings.product_image | image_url: width: 800 }}" alt="Product Image">
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {% endif %}
+      </div>
+
+      <div class="content-side">
+        {% if section.settings.heading != blank %}
+          <h2 class="showcase-heading">{{ section.settings.heading | newline_to_br }}</h2>
+        {% endif %}
+
+        {% if section.settings.subtext != blank %}
+          <div class="showcase-subtext">{{ section.settings.subtext }}</div>
+        {% endif %}
+
+        <div class="capsule-grid">
+          {% for block in section.blocks %}
+            <div class="info-capsule" {{ block.shopify_attributes }}>
+              {{ block.settings.label }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product Showcase Overlay",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image (Kitchen Blur)"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Main Product Image (PNG preferred)"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "100% NATURAL INGREDIENTS"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Sub-text",
+      "default": "Ditch seed oils. Upgrade to natural nut oils. So why are TPCN sauces a healthy alternative?"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text & Border Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "capsule",
+      "name": "Info Capsule",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "LOW CALORIE"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Showcase Overlay",
+      "blocks": [
+        { "type": "capsule", "settings": { "label": "LOW CALORIE" } },
+        { "type": "capsule", "settings": { "label": "MORE PROTEIN" } },
+        { "type": "capsule", "settings": { "label": "FIBRE-PACKED" } },
+        { "type": "capsule", "settings": { "label": "NUTRIENT-FULL" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
