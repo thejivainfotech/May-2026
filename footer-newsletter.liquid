@@ -1,0 +1,656 @@
+{% comment %}
+  Section: Tasty Emails Newsletter
+  Place this file in: sections/newsletter-tasty-emails.liquid
+  KEY FEATURES:
+    - Card background = gradient (customizable colors + angle)
+    - Product image overflows section top AND bottom
+    - Logo image picker on right side
+    - Clean form pill (no border trick)
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&display=swap" rel="stylesheet">
+
+<style>
+  /* ─────────────────────────────────────────────
+     OUTER WRAPPER
+  ───────────────────────────────────────────── */
+  .te-wrapper {
+    position: relative;
+    padding-top: {{ section.settings.image_overflow_top }}px;
+    padding-bottom: 35px;
+    overflow: hidden;
+    max-width: 1400px;
+    margin-inline: auto;
+  }
+  .te-form-pill svg {
+     width: 32px;
+     height: 32px;
+    }
+  /* ─────────────────────────────────────────────
+     CARD — GRADIENT BACKGROUND
+  ───────────────────────────────────────────── */
+  .te-card {
+    position: relative;
+    background: linear-gradient(
+      {{ section.settings.bg_gradient_angle }}deg,
+      {{ section.settings.bg_color_1 }} 0%,
+      {{ section.settings.bg_color_2 }} 50%,
+      {{ section.settings.bg_color_3 }} 100%
+    );
+    border-radius: {{ section.settings.border_radius }}px;
+    overflow: visible;
+    min-height: {{ section.settings.card_height }}px;
+    display: flex;
+    align-items: stretch;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  /* ─────────────────────────────────────────────
+     LEFT COLUMN
+  ───────────────────────────────────────────── */
+  .te-left {
+    flex: 0 0 38%;
+    max-width: 38%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 48px 20px 80px 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .te-heading {
+    font-weight: 900;
+    font-size: {{ section.settings.heading_size }}px;
+    line-height: 1.1;
+    color: {{ section.settings.heading_color }};
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    margin: 0 0 28px 0;
+  }
+
+  /* ─────────────────────────────────────────────
+     EMAIL FORM PILL
+  ───────────────────────────────────────────── */
+  .te-form-pill {
+    display: flex;
+    align-items: center;
+    background: {{ section.settings.input_bg_color }};
+    border-radius: 100px;
+    padding: 13px 22px;
+    gap: 12px;
+    max-width: 340px;
+    width: 100%;
+    border: 1px solid #ffffff;
+  }
+
+  .te-form-pill .te-envelope {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    fill: {{ section.settings.input_icon_color }};
+    opacity: 0.7;
+  }
+
+  .te-form-pill input[type="email"] {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: "Antonio", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 1;
+    text-transform: uppercase;
+    color: {{ section.settings.input_text_color }};
+    width: 100%;
+  }
+
+  .te-form-pill input[type="email"]::placeholder {
+    color: {{ section.settings.input_placeholder_color }};
+    opacity: 1;
+  }
+
+  .te-form-pill button { display: none; }
+
+  .te-feedback {
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: {{ section.settings.heading_color }};
+  }
+  .te-feedback--error { color: #ff4444 !important; }
+
+  /* ─────────────────────────────────────────────
+     CENTER IMAGE — OVERFLOW TOP & BOTTOM
+  ───────────────────────────────────────────── */
+  .te-image-wrap {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -{{ section.settings.image_overflow_top }}px;
+    bottom: -{{ section.settings.image_overflow_bottom }}px;
+    width: {{ section.settings.image_width }}px;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .te-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+
+  /* ─────────────────────────────────────────────
+     RIGHT COLUMN — LOGO
+  ───────────────────────────────────────────── */
+  .te-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding: 28px 42px 28px 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .te-right-logo {
+    display: block;
+    width: {{ section.settings.right_logo_width }}px;
+    height: auto;
+    object-fit: contain;
+    object-position: top right;
+  }
+
+  /* ─────────────────────────────────────────────
+     SOCIAL ICONS
+  ───────────────────────────────────────────── */
+  .te-socials {
+    position: absolute;
+    bottom: 40px;
+    right: 42px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    z-index: 5;
+  }
+
+  .te-socials a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2.5px solid {{ section.settings.social_icon_color }};
+    color: {{ section.settings.social_icon_color }};
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .te-socials a:hover {
+    background: {{ section.settings.social_icon_color }};
+    color: rgba(0,0,0,0.7);
+  }
+
+  .te-socials a svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+
+  /* ─────────────────────────────────────────────
+     COPYRIGHT
+  ───────────────────────────────────────────── */
+  .te-copyright {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 6px 48px;
+    font-family: "Antonio", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    color: {{ section.settings.copyright_color }};
+    z-index: 6;
+  }
+
+  /* ─────────────────────────────────────────────
+     MOBILE
+  ───────────────────────────────────────────── */
+  @media (max-width: 767px) {
+    .te-wrapper {
+      padding-top: 0;
+      padding-bottom: 30px;
+    }
+    .te-image-wrap img {
+        position: absolute;
+        top: 240px;
+        max-height: 120px;
+        object-fit: cover;
+    }
+    h2.te-heading {
+        text-align: left;
+    }
+    .te-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      min-height: unset;
+      overflow: hidden;
+      align-items: center;
+      text-align: center;
+    }
+
+    .te-left,
+    .te-right {
+      flex: unset;
+      max-width: 100%;
+    }
+
+    .te-left  { padding: 36px 24px 20px; }
+
+    .te-right {
+        align-items: flex-start;
+        padding: 0 10px 0px 0px;
+        margin-left: 0;
+    }
+
+    .te-right-logo { width: 120px; }
+
+    .te-form-pill { max-width: 100%; }
+
+    .te-image-wrap {
+      position: relative;
+      top: auto; bottom: auto;
+      left: auto; transform: none;
+      width: 100%;
+      height: 260px;
+    }
+
+    .te-socials {
+      position: relative;
+      bottom: auto; right: auto;
+      padding: 0 24px 20px;
+    }
+
+    .te-copyright {
+      position: relative;
+      bottom: auto;
+      padding: 10px 24px 0;
+    }
+
+    .te-heading { font-size: 48px; }
+  }
+</style>
+
+<div class="te-wrapper" id="te-{{ section.id }}">
+  <div class="te-card">
+
+    <!-- ── LEFT ── -->
+    <div class="te-left">
+      <h2 class="te-heading">
+        {{ section.settings.heading_line1 }}<br>
+        {{ section.settings.heading_line2 }}
+      </h2>
+
+      {% form 'customer', id: 'te-form-{{ section.id }}' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <div class="te-form-pill">
+          <svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="800px" height="800px" viewBox="-15 -15 60.00 60.00" version="1.1" id="svg822" inkscape:version="0.92.4 (f8dce91, 2019-08-02)" sodipodi:docname="email.svg" fill="#000000">
+
+<g id="SVGRepo_bgCarrier" stroke-width="0">
+
+<rect x="-15" y="-15" width="60.00" height="60.00" rx="30" fill="#d8cec4" strokewidth="0"/>
+
+</g>
+
+<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+
+<g id="SVGRepo_iconCarrier"> <defs id="defs816"/> <sodipodi:namedview id="base" pagecolor="#ffffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="17.833333" inkscape:cx="15" inkscape:cy="10.99181" inkscape:document-units="px" inkscape:current-layer="layer1" showgrid="true" units="px" inkscape:window-width="1366" inkscape:window-height="713" inkscape:window-x="0" inkscape:window-y="0" inkscape:window-maximized="1" showguides="false"> <inkscape:grid type="xygrid" id="grid816"/> </sodipodi:namedview> <metadata id="metadata819"> <rdf:rdf> <cc:work rdf:about=""> <dc:format>image/svg+xml</dc:format> <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/> <dc:title> </dc:title> </cc:work> </rdf:rdf> </metadata> <g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="translate(0,-289.0625)"> <path style="opacity:1;fill:#fff;fill-opacity:1;stroke:none;stroke-width:0.49999997;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 5 5 C 4.2955948 5 3.6803238 5.3628126 3.3242188 5.9101562 L 14.292969 16.878906 C 14.696939 17.282876 15.303061 17.282876 15.707031 16.878906 L 26.675781 5.9101562 C 26.319676 5.3628126 25.704405 5 25 5 L 5 5 z M 3 8.4140625 L 3 23 C 3 24.108 3.892 25 5 25 L 25 25 C 26.108 25 27 24.108 27 23 L 27 8.4140625 L 17.121094 18.292969 C 15.958108 19.455959 14.041892 19.455959 12.878906 18.292969 L 3 8.4140625 z " transform="translate(0,289.0625)" id="rect4592"/> </g> </g>
+
+</svg>
+          <input
+            type="email"
+            name="contact[email]"
+            placeholder="{{ section.settings.input_placeholder }}"
+            autocomplete="email"
+            required
+          >
+          <button type="submit">Subscribe</button>
+        </div>
+
+        {% if form.posted_successfully? %}
+          <p class="te-feedback">{{ section.settings.success_message }}</p>
+        {% endif %}
+        {% if form.errors %}
+          <p class="te-feedback te-feedback--error">{{ form.errors | default_errors }}</p>
+        {% endif %}
+      {% endform %}
+    </div>
+
+    <!-- ── CENTER IMAGE ── -->
+    {% if section.settings.product_image != blank %}
+      <div class="te-image-wrap">
+        {{
+          section.settings.product_image
+          | image_url: width: 900
+          | image_tag:
+            alt: section.settings.product_image_alt,
+            loading: 'lazy'
+        }}
+      </div>
+    {% endif %}
+
+    <!-- ── RIGHT — LOGO ── -->
+    <div class="te-right">
+      {% if section.settings.right_logo != blank %}
+        {{
+          section.settings.right_logo
+          | image_url: width: 300
+          | image_tag:
+            class: 'te-right-logo',
+            alt: section.settings.right_logo_alt,
+            loading: 'lazy'
+        }}
+      {% endif %}
+    </div>
+
+    <!-- ── SOCIAL ICONS ── -->
+    <div class="te-socials">
+      {% if section.settings.instagram_url != blank %}
+        <a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+      {% endif %}
+      {% if section.settings.facebook_url != blank %}
+        <a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener" aria-label="facebook">
+          <svg fill="#fff" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800px" height="800px" viewBox="0 0 512 512" xml:space="preserve" stroke="#fff">
+
+<g id="SVGRepo_bgCarrier" stroke-width="0"/>
+
+<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+
+<g id="SVGRepo_iconCarrier"> <g id="7935ec95c421cee6d86eb22ecd11b7e3"> <path style="display: inline;" d="M283.122,122.174c0,5.24,0,22.319,0,46.583h83.424l-9.045,74.367h-74.379 c0,114.688,0,268.375,0,268.375h-98.726c0,0,0-151.653,0-268.375h-51.443v-74.367h51.443c0-29.492,0-50.463,0-56.302 c0-27.82-2.096-41.02,9.725-62.578C205.948,28.32,239.308-0.174,297.007,0.512c57.713,0.711,82.04,6.263,82.04,6.263 l-12.501,79.257c0,0-36.853-9.731-54.942-6.263C293.539,83.238,283.122,94.366,283.122,122.174z"> </path> </g> </g>
+
+</svg>
+        </a>
+      {% endif %}
+      {% if section.settings.tiktok_url != blank %}
+        <a href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener" aria-label="TikTok">
+          <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.19 8.19 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/></svg>
+        </a>
+      {% endif %}
+      {% if section.settings.youtube_url != blank %}
+        <a href="{{ section.settings.youtube_url }}" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+        </a>
+      {% endif %}
+    </div>
+
+  </div><!-- /.te-card -->
+
+  <div class="te-copyright">
+    &copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright_text }}
+  </div>
+
+</div><!-- /.te-wrapper -->
+
+{% schema %}
+{
+  "name": "Newsletter – Tasty Emails",
+  "tag": "section",
+  "class": "section-te",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Card Layout"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Card Border Radius (px)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Card Min Height (px)",
+      "min": 200,
+      "max": 600,
+      "step": 10,
+      "default": 360
+    },
+    {
+      "type": "header",
+      "content": "Background Gradient"
+    },
+    {
+      "type": "range",
+      "id": "bg_gradient_angle",
+      "label": "Gradient Angle (deg)",
+      "min": 0,
+      "max": 350,
+      "step": 10,
+      "default": 120
+    },
+    {
+      "type": "color",
+      "id": "bg_color_1",
+      "label": "Gradient – Start Color",
+      "default": "#b5a898"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_2",
+      "label": "Gradient – Mid Color",
+      "default": "#a89888"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_3",
+      "label": "Gradient – End Color",
+      "default": "#c2b4a6"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading_line1",
+      "label": "Heading – Line 1",
+      "default": "WE SEND"
+    },
+    {
+      "type": "text",
+      "id": "heading_line2",
+      "label": "Heading – Line 2",
+      "default": "TASTY EMAILS."
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Colour",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Font Size (px)",
+      "min": 32,
+      "max": 100,
+      "step": 2,
+      "default": 72
+    },
+    {
+      "type": "header",
+      "content": "Email Input"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success Message (after subscribe)",
+      "default": "Thanks for subscribing!"
+    },
+    {
+      "type": "text",
+      "id": "input_placeholder",
+      "label": "Placeholder Text",
+      "default": "INSERT EMAIL ADDRESS"
+    },
+    {
+      "type": "color",
+      "id": "input_bg_color",
+      "label": "Input Background",
+      "default": "#ccc0b5"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Input Text Colour",
+      "default": "#5a4a3a"
+    },
+    {
+      "type": "color",
+      "id": "input_icon_color",
+      "label": "Envelope Icon Colour",
+      "default": "#5a4a3a"
+    },
+    {
+      "type": "color",
+      "id": "input_placeholder_color",
+      "label": "Placeholder Colour",
+      "default": "#7a6a5a"
+    },
+    {
+      "type": "header",
+      "content": "Center Product Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product / Hand Image"
+    },
+    {
+      "type": "text",
+      "id": "product_image_alt",
+      "label": "Product Image Alt Text",
+      "default": "Product Image"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Image Column Width (px)",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "image_overflow_top",
+      "label": "Image Overflow – Top (px)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "image_overflow_bottom",
+      "label": "Image Overflow – Bottom (px)",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "header",
+      "content": "Right Side Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_logo",
+      "label": "Logo Image (Top Right)"
+    },
+    {
+      "type": "text",
+      "id": "right_logo_alt",
+      "label": "Logo Alt Text",
+      "default": "Brand Logo"
+    },
+    {
+      "type": "range",
+      "id": "right_logo_width",
+      "label": "Logo Width (px)",
+      "min": 60,
+      "max": 300,
+      "step": 10,
+      "default": 140
+    },
+    {
+      "type": "header",
+      "content": "Social Icons"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "color",
+      "id": "social_icon_color",
+      "label": "Social Icon Colour",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Copyright"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Brand Name",
+      "default": "THISPRODUCTCONTAINSNUTS"
+    },
+    {
+      "type": "color",
+      "id": "copyright_color",
+      "label": "Copyright Text Colour",
+      "default": "#7a6a5a"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter – Tasty Emails",
+      "category": "Newsletter"
+    }
+  ]
+}
+{% endschema %}
