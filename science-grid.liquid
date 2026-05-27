@@ -1,0 +1,459 @@
+{% comment %} Science Grid Section — Full Dynamic Liquid with Schema {% endcomment %}
+
+{%- liquid
+  assign cols = section.settings.columns_per_row
+  assign col_percent = 100.0 | divided_by: cols
+-%}
+
+<style>
+  #sgs-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px {{ section.settings.padding_side }}px {{ section.settings.padding_bottom }}px {{ section.settings.padding_side }}px;
+    text-align: {{ section.settings.text_align }};
+  }
+
+  #sgs-{{ section.id }} .sgs-header {
+    max-width: {{ section.settings.header_max_width }}px;
+    margin: 0 auto {{ section.settings.header_bottom_gap }}px auto;
+  }
+
+  #sgs-{{ section.id }} .sgs-heading {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: {{ section.settings.heading_weight }};
+    color: {{ section.settings.heading_color }};
+    text-transform: {{ section.settings.heading_transform }};
+    line-height: 1.1;
+    margin: 0 0 {{ section.settings.heading_bottom_gap }}px 0;
+    font-family: "Antonio", sans-serif;
+    letter-spacing: {{ section.settings.heading_letter_spacing }}px;
+  }
+
+  #sgs-{{ section.id }} .sgs-subtext {
+    font-size: {{ section.settings.subtext_size }}px;
+    color: {{ section.settings.subtext_color }};
+    line-height: 1.14;
+    margin: 0 auto;
+    max-width: {{ section.settings.subtext_max_width }}px;
+    font-weight: 500;
+  }
+
+  #sgs-{{ section.id }} .sgs-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ section.settings.grid_gap }}px;
+    justify-content: {{ section.settings.grid_justify }};
+    margin-top: {{ section.settings.grid_top_gap }}px;
+    width: 100%;
+    max-width: 1300px;
+    margin: auto;
+    padding-top: 40px;
+  }
+
+  #sgs-{{ section.id }} .sgs-item {
+    flex: 0 0 calc({{ col_percent }}% - {{ section.settings.grid_gap }}px + {{ section.settings.grid_gap | divided_by: cols }}px);
+    max-width: calc({{ col_percent }}% - {{ section.settings.grid_gap }}px + {{ section.settings.grid_gap | divided_by: cols }}px);
+    display: flex;
+    flex-direction: column;
+    align-items: {{ section.settings.item_align }};
+    text-align: {{ section.settings.text_align }};
+  }
+
+  #sgs-{{ section.id }} .sgs-img-wrap {
+    width: {{ section.settings.image_size }}px;
+    height: {{ section.settings.image_size }}px;
+    margin-bottom: {{ section.settings.image_label_gap }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: {{ section.settings.image_bg_color }};
+    border-radius: {{ section.settings.image_radius }}px;
+    border: {{ section.settings.image_border_width }}px solid {{ section.settings.image_border_color }};
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  #sgs-{{ section.id }} .sgs-img-wrap img,
+  #sgs-{{ section.id }} .sgs-img-wrap svg {
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.image_fit }};
+    display: block;
+  }
+
+  #sgs-{{ section.id }} .sgs-label {
+    font-size: {{ section.settings.label_size }}px;
+    font-weight: {{ section.settings.label_weight }};
+    color: {{ section.settings.label_color }};
+    text-transform: {{ section.settings.label_transform }};
+    letter-spacing: {{ section.settings.label_letter_spacing }}px;
+    line-height: 1.18;
+    margin: 0;
+    font-family: "Antonio", sans-serif !important;
+    width: 100%;
+    max-width: 190px;
+  }
+
+  #sgs-{{ section.id }} .sgs-sublabel {
+    font-size: {{ section.settings.sublabel_size }}px;
+    color: {{ section.settings.sublabel_color }};
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  #sgs-{{ section.id }} .sgs-item-link {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: {{ section.settings.item_align }};
+    width: 100%;
+    transition: opacity 0.2s;
+  }
+  #sgs-{{ section.id }} .sgs-item-link:hover { opacity: 0.8; }
+
+  #sgs-{{ section.id }} .sgs-divider {
+    width: {{ section.settings.divider_width }}px;
+    height: {{ section.settings.divider_height }}px;
+    background: {{ section.settings.divider_color }};
+    margin: {{ section.settings.divider_margin }}px auto;
+    border-radius: 99px;
+    {% unless section.settings.show_divider %}display: none;{% endunless %}
+  }
+
+  @media screen and (max-width: 900px) {
+    #sgs-{{ section.id }} .sgs-item {
+      flex: 0 0 calc(50% - {{ section.settings.grid_gap }}px / 2);
+      max-width: calc(50% - {{ section.settings.grid_gap }}px / 2);
+    }
+  }
+  @media screen and (max-width: 480px) {
+    #sgs-{{ section.id }} .sgs-item {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+    #sgs-{{ section.id }} .sgs-heading {
+      font-size: {{ section.settings.heading_size | times: 0.65 | round }}px;
+    }
+    #sgs-{{ section.id }} { padding: 40px 20px; }
+  }
+</style>
+
+<div id="sgs-{{ section.id }}">
+
+  <div class="sgs-header">
+    {%- if section.settings.heading != blank -%}
+      <{{ section.settings.heading_tag }} class="sgs-heading">
+        {{ section.settings.heading }}
+      </{{ section.settings.heading_tag }}>
+    {%- endif -%}
+
+    {%- if section.settings.show_divider -%}
+      <div class="sgs-divider"></div>
+    {%- endif -%}
+
+    {%- if section.settings.subtext != blank -%}
+      <p class="sgs-subtext">{{ section.settings.subtext }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="sgs-grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'grid_item' -%}
+          <div class="sgs-item" {{ block.shopify_attributes }}>
+
+            {%- assign has_link = false -%}
+            {%- if block.settings.item_link != blank -%}
+              {%- assign has_link = true -%}
+            {%- endif -%}
+
+            {%- if has_link -%}
+              <a class="sgs-item-link" href="{{ block.settings.item_link }}">
+            {%- else -%}
+              <div class="sgs-item-link" style="cursor:default;">
+            {%- endif -%}
+
+              <div class="sgs-img-wrap"
+                style="
+                  width:{{ block.settings.image_size_override | default: section.settings.image_size }}px;
+                  height:{{ block.settings.image_size_override | default: section.settings.image_size }}px;
+                  background:{{ block.settings.image_bg_override | default: section.settings.image_bg_color }};
+                  border-radius:{{ block.settings.image_radius_override | default: section.settings.image_radius }}px;
+                ">
+                {%- if block.settings.image != blank -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 600
+                    | image_tag:
+                      alt: block.settings.label,
+                      loading: 'lazy',
+                      widths: '120, 200, 300, 400, 600'
+                  }}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {%- endif -%}
+              </div>
+
+              {%- if block.settings.label != blank -%}
+                <p class="sgs-label"
+                  style="
+                    color: {{ block.settings.label_color_override | default: section.settings.label_color }};
+                    font-size: {{ block.settings.label_size_override | default: section.settings.label_size }}px;
+                  ">
+                  {{ block.settings.label }}
+                </p>
+              {%- endif -%}
+
+              {%- if block.settings.sublabel != blank -%}
+                <p class="sgs-sublabel"
+                  style="color: {{ block.settings.sublabel_color_override | default: section.settings.sublabel_color }};">
+                  {{ block.settings.sublabel }}
+                </p>
+              {%- endif -%}
+
+            {%- if has_link -%}
+              </a>
+            {%- else -%}
+              </div>
+            {%- endif -%}
+
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.btn_label != blank and section.settings.btn_link != blank -%}
+    <div style="margin-top: {{ section.settings.btn_top_gap }}px;">
+      <a href="{{ section.settings.btn_link }}"
+        style="
+          display: inline-block;
+          padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px;
+          background: {{ section.settings.btn_bg }};
+          color: {{ section.settings.btn_color }};
+          font-size: {{ section.settings.btn_font_size }}px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          text-decoration: none;
+          border-radius: {{ section.settings.btn_radius }}px;
+          border: {{ section.settings.btn_border_width }}px solid {{ section.settings.btn_border_color }};
+          transition: background 0.2s, color 0.2s;
+        ">
+        {{ section.settings.btn_label }}
+      </a>
+    </div>
+  {%- endif -%}
+
+</div>
+
+{% schema %}
+{
+  "name": "Science Grid Section",
+  "tag": "section",
+  "class": "science-grid-section",
+  "max_blocks": 12,
+  "settings": [
+
+    { "type": "header", "content": "🎨 Section Background" },
+    { "type": "color", "id": "bg_color", "label": "Background Color", "default": "#f0f0f0" },
+    { "type": "range", "id": "padding_top",    "label": "Padding Top (px)",        "min": 0,  "max": 160, "step": 8,  "default": 72 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding Bottom (px)",     "min": 0,  "max": 160, "step": 8,  "default": 72 },
+    { "type": "range", "id": "padding_side",   "label": "Padding Left/Right (px)", "min": 0,  "max": 160, "step": 8,  "default": 48 },
+    {
+      "type": "select", "id": "text_align", "label": "Overall Text Alignment",
+      "options": [
+        { "value": "left",   "label": "Left"   },
+        { "value": "center", "label": "Center" },
+        { "value": "right",  "label": "Right"  }
+      ],
+      "default": "center"
+    },
+
+    { "type": "header", "content": "✏️ Heading" },
+    { "type": "text",  "id": "heading", "label": "Heading Text", "default": "Don't Believe Us? We Have Science On Our Side!" },
+    {
+      "type": "select", "id": "heading_tag", "label": "Heading Tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    { "type": "range", "id": "heading_size",           "label": "Heading Font Size (px)",      "min": 16,  "max": 90,   "step": 2,   "default": 46 },
+    {
+      "type": "select", "id": "heading_weight", "label": "Heading Font Weight",
+      "options": [
+        { "value": "700", "label": "Bold"       },
+        { "value": "800", "label": "Extra Bold" },
+        { "value": "900", "label": "Black"      }
+      ],
+      "default": "900"
+    },
+    { "type": "color",  "id": "heading_color",          "label": "Heading Color",               "default": "#1a1a2e" },
+    {
+      "type": "select", "id": "heading_transform", "label": "Heading Transform",
+      "options": [
+        { "value": "uppercase",  "label": "UPPERCASE"  },
+        { "value": "capitalize", "label": "Capitalize" },
+        { "value": "none",       "label": "None"       }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "select", "id": "heading_font", "label": "Heading Font",
+      "options": [
+        { "value": "inherit",    "label": "Theme Default" },
+        { "value": "sans-serif", "label": "Sans Serif"    },
+        { "value": "serif",      "label": "Serif"         },
+        { "value": "monospace",  "label": "Monospace"     }
+      ],
+      "default": "inherit"
+    },
+    { "type": "range", "id": "heading_letter_spacing", "label": "Heading Letter Spacing (px)", "min": 0,   "max": 10,   "step": 1,   "default": 0 },
+    { "type": "range", "id": "heading_bottom_gap",     "label": "Heading Bottom Gap (px)",     "min": 0,   "max": 60,   "step": 4,   "default": 16 },
+    { "type": "range", "id": "header_max_width",       "label": "Header Max Width (px)",       "min": 300, "max": 1500, "step": 40,  "default": 900 },
+    { "type": "range", "id": "header_bottom_gap",      "label": "Header to Grid Gap (px)",     "min": 0,   "max": 100,  "step": 4,   "default": 20 },
+
+    { "type": "header", "content": "〰️ Divider" },
+    { "type": "checkbox", "id": "show_divider", "label": "Show Divider", "default": false },
+    { "type": "color",  "id": "divider_color",  "label": "Divider Color",              "default": "#cccccc" },
+    { "type": "range",  "id": "divider_width",  "label": "Divider Width (px)",  "min": 20, "max": 400, "step": 10, "default": 80 },
+    { "type": "range",  "id": "divider_height", "label": "Divider Thickness (px)", "min": 1, "max": 10, "step": 1, "default": 2 },
+    { "type": "range",  "id": "divider_margin", "label": "Divider Margin (px)",  "min": 0, "max": 40,  "step": 4,  "default": 16 },
+
+    { "type": "header", "content": "📝 Subtext / Description" },
+    { "type": "textarea", "id": "subtext", "label": "Subtext / Description", "default": "Nuts are backed by real nutritional value, from healthy fats and plant protein to fiber, vitamins and minerals. That is why we use them as the base for sauces that satisfy your cravings while bringing more to your food than the usual oil-heavy bottle." },
+    { "type": "range", "id": "subtext_size",      "label": "Subtext Font Size (px)", "min": 12, "max": 28,   "step": 1,  "default": 16 },
+    { "type": "color", "id": "subtext_color",     "label": "Subtext Color",          "default": "#666677" },
+    { "type": "range", "id": "subtext_max_width", "label": "Subtext Max Width (px)", "min": 200, "max": 1000, "step": 20, "default": 680 },
+
+    { "type": "header", "content": "📐 Grid Layout" },
+    {
+      "type": "select", "id": "columns_per_row", "label": "Columns Per Row (Desktop)",
+      "options": [
+        { "value": "2", "label": "2 Columns" },
+        { "value": "3", "label": "3 Columns" },
+        { "value": "4", "label": "4 Columns" },
+        { "value": "5", "label": "5 Columns" },
+        { "value": "6", "label": "6 Columns" }
+      ],
+      "default": "5"
+    },
+    { "type": "range", "id": "grid_gap",      "label": "Gap Between Items (px)", "min": 0, "max": 80,  "step": 4, "default": 24 },
+    { "type": "range", "id": "grid_top_gap",  "label": "Grid Top Gap (px)",      "min": 0, "max": 100, "step": 4, "default": 40 },
+    {
+      "type": "select", "id": "grid_justify", "label": "Grid Justify",
+      "options": [
+        { "value": "center",        "label": "Center"        },
+        { "value": "flex-start",    "label": "Left"          },
+        { "value": "flex-end",      "label": "Right"         },
+        { "value": "space-between", "label": "Space Between" },
+        { "value": "space-around",  "label": "Space Around"  }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select", "id": "item_align", "label": "Item Inner Alignment",
+      "options": [
+        { "value": "center",     "label": "Center" },
+        { "value": "flex-start", "label": "Left"   },
+        { "value": "flex-end",   "label": "Right"  }
+      ],
+      "default": "center"
+    },
+
+    { "type": "header", "content": "🖼️ Image Style (Default)" },
+    { "type": "range", "id": "image_size",         "label": "Image Size (px)",         "min": 40,  "max": 400, "step": 10, "default": 160 },
+    { "type": "color", "id": "image_bg_color",     "label": "Image Background Color",  "default": "#ffffff00" },
+    { "type": "range", "id": "image_radius",       "label": "Image Border Radius (px)","min": 0,   "max": 100, "step": 4,  "default": 0 },
+    { "type": "range", "id": "image_border_width", "label": "Image Border Width (px)", "min": 0,   "max": 8,   "step": 1,  "default": 0 },
+    { "type": "color", "id": "image_border_color", "label": "Image Border Color",      "default": "#dddddd" },
+    {
+      "type": "select", "id": "image_fit", "label": "Image Fit",
+      "options": [
+        { "value": "contain", "label": "Contain" },
+        { "value": "cover",   "label": "Cover"   },
+        { "value": "fill",    "label": "Fill"    }
+      ],
+      "default": "contain"
+    },
+    { "type": "range", "id": "image_label_gap", "label": "Image to Label Gap (px)", "min": 0, "max": 40, "step": 2, "default": 16 },
+
+    { "type": "header", "content": "🔤 Label Style (Default)" },
+    { "type": "range", "id": "label_size", "label": "Label Font Size (px)", "min": 10, "max": 32, "step": 1, "default": 13 },
+    {
+      "type": "select", "id": "label_weight", "label": "Label Font Weight",
+      "options": [
+        { "value": "400", "label": "Normal"     },
+        { "value": "600", "label": "Semi Bold"  },
+        { "value": "700", "label": "Bold"       },
+        { "value": "800", "label": "Extra Bold" },
+        { "value": "900", "label": "Black"      }
+      ],
+      "default": "800"
+    },
+    { "type": "color", "id": "label_color", "label": "Label Color", "default": "#1a1a2e" },
+    {
+      "type": "select", "id": "label_transform", "label": "Label Text Transform",
+      "options": [
+        { "value": "uppercase",  "label": "UPPERCASE"  },
+        { "value": "capitalize", "label": "Capitalize" },
+        { "value": "none",       "label": "None"       }
+      ],
+      "default": "uppercase"
+    },
+    { "type": "range", "id": "label_letter_spacing", "label": "Label Letter Spacing (px)", "min": 0, "max": 6, "step": 1, "default": 1 },
+    { "type": "range", "id": "sublabel_size",  "label": "Sub-label Font Size (px)", "min": 10, "max": 24, "step": 1, "default": 13 },
+    { "type": "color", "id": "sublabel_color", "label": "Sub-label Color", "default": "#888899" },
+
+    { "type": "header", "content": "🔘 Optional Button" },
+    { "type": "text",  "id": "btn_label",        "label": "Button Text" },
+    { "type": "url",   "id": "btn_link",          "label": "Button Link" },
+    { "type": "color", "id": "btn_bg",            "label": "Button Background",  "default": "#1a1a2e" },
+    { "type": "color", "id": "btn_color",         "label": "Button Text Color",  "default": "#ffffff" },
+    { "type": "range", "id": "btn_font_size",     "label": "Button Font Size (px)",     "min": 10, "max": 24, "step": 1,  "default": 14 },
+    { "type": "range", "id": "btn_radius",        "label": "Button Border Radius (px)", "min": 0,  "max": 60, "step": 2,  "default": 50 },
+    { "type": "range", "id": "btn_padding_v",     "label": "Button Padding V (px)",     "min": 4,  "max": 40, "step": 2,  "default": 14 },
+    { "type": "range", "id": "btn_padding_h",     "label": "Button Padding H (px)",     "min": 8,  "max": 80, "step": 2,  "default": 32 },
+    { "type": "range", "id": "btn_border_width",  "label": "Button Border Width (px)",  "min": 0,  "max": 6,  "step": 1,  "default": 0  },
+    { "type": "color", "id": "btn_border_color",  "label": "Button Border Color",       "default": "#1a1a2e" },
+    { "type": "range", "id": "btn_top_gap",       "label": "Button Top Gap (px)",       "min": 0,  "max": 80, "step": 4,  "default": 40 }
+
+  ],
+
+  "blocks": [
+    {
+      "type": "grid_item",
+      "name": "Grid Item",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Item Image" },
+        { "type": "text", "id": "label",    "label": "Label",                    "default": "Energy-Dense & Nutrient-Rich" },
+        { "type": "text", "id": "sublabel", "label": "Sub Label (optional)" },
+        { "type": "url",  "id": "item_link","label": "Item Link (optional)" },
+        { "type": "header", "content": "Per-Item Overrides" },
+        { "type": "color", "id": "label_color_override",    "label": "Label Color Override",     "default": "#1a1a2e"   },
+        { "type": "range", "id": "label_size_override",     "label": "Label Size Override (px)", "min": 10, "max": 32, "step": 1, "default": 13 },
+        { "type": "color", "id": "sublabel_color_override", "label": "Sub-label Color Override", "default": "#888899"   },
+        { "type": "range", "id": "image_size_override",     "label": "Image Size Override (px)", "min": 40, "max": 400, "step": 10, "default": 160 },
+        { "type": "color", "id": "image_bg_override",       "label": "Image BG Color Override",  "default": "#ffffff00" },
+        { "type": "range", "id": "image_radius_override",   "label": "Image Radius Override (px)","min": 0, "max": 100, "step": 4, "default": 0 }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Science Grid Section",
+      "category": "Custom Sections",
+      "blocks": [
+        { "type": "grid_item", "settings": { "label": "Energy-Dense & Nutrient-Rich"           } },
+        { "type": "grid_item", "settings": { "label": "Health-Promoting Bioactive Compounds"   } },
+        { "type": "grid_item", "settings": { "label": "Packed With Health Benefits"            } },
+        { "type": "grid_item", "settings": { "label": "Natural High Quality Protein & Fiber"   } },
+        { "type": "grid_item", "settings": { "label": "Really Rich In Nutritional Value"       } }
+      ]
+    }
+  ]
+}
+{% endschema %}
