@@ -1,0 +1,547 @@
+<section
+  class="sauce-picker-section"
+  id="sauce-picker-{{ section.id }}"
+  style="
+    background-color: {{ section.settings.background_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="sauce-picker__container">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="sauce-picker__heading">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.subheading != blank %}
+      <p class="sauce-picker__subheading">{{ section.settings.subheading }}</p>
+    {% endif %}
+
+    {% if section.settings.collection != blank %}
+      {% assign col = collections[section.settings.collection] %}
+      {% assign col_products = col.products %}
+      {% assign total_col = col_products.size %}
+
+      <div class="sauce-picker__grid sauce-picker__grid--{{ total_col | at_most: 6 }}">
+        {% for product in col_products %}
+
+          <div
+            class="sauce-card"
+            style="
+              background-color: {{ section.settings.default_card_color }};
+              color: {{ section.settings.default_text_color }};
+            "
+          >
+            <div class="sauce-card__inner">
+              {% comment %} Watermark moved inside inner box {% endcomment %}
+              {% if section.settings.watermark_text != blank %}
+                <span class="sauce-card__watermark" aria-hidden="true">
+                  {{ section.settings.watermark_text }}
+                </span>
+              {% endif %}
+
+              <h3 class="sauce-card__title" style="color: {{ section.settings.default_text_color }};">
+                {{ product.title | upcase }}
+              </h3>
+
+              {% if product.description != blank %}
+                <p class="sauce-card__desc" style="color: {{ section.settings.default_text_color }};">
+                  {{ product.description | strip_html | truncate: 100 }}
+                </p>
+              {% endif %}
+
+              <div class="sauce-card__image-wrap">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | img_url: '300x' }}"
+                    alt="{{ product.title | escape }}"
+                    class="sauce-card__image"
+                    loading="lazy"
+                    width="150"
+                    height="220"
+                  >
+                {% endif %}
+              </div>
+
+              <a
+                href="{{ product.url }}"
+                class="sauce-card__btn"
+                style="
+                  background-color: {{ section.settings.default_btn_bg }};
+                  color: {{ section.settings.default_btn_text }};
+                "
+              >
+                {{ section.settings.default_btn_label }}
+              </a>
+            </div>
+          </div>
+
+        {% else %}
+          <p style="text-align:center; opacity:0.6; grid-column: 1/-1;">
+            Is collection mein abhi koi product nahi hai.
+          </p>
+        {% endfor %}
+      </div>
+
+    {% else %}
+
+      <div class="sauce-picker__grid sauce-picker__grid--{{ section.blocks.size }}">
+        {% for block in section.blocks %}
+          {% assign text_color = block.settings.text_color %}
+
+          {% assign has_card_bg_img = false %}
+          {% if block.settings.card_bg_image != blank %}
+            {% assign has_card_bg_img = true %}
+          {% endif %}
+
+          <div
+            class="sauce-card{% if has_card_bg_img %} sauce-card--has-bg{% endif %}"
+            {{ block.shopify_attributes }}
+            style="
+              {% if has_card_bg_img %}
+                background-image: url('{{ block.settings.card_bg_image | img_url: '800x' }}');
+                background-size: cover;
+                background-position: center;
+              {% else %}
+                background-color: {{ block.settings.card_color }};
+              {% endif %}
+              color: {{ text_color }};
+            "
+          >
+            {% if has_card_bg_img %}
+              <div class="sauce-card__overlay"></div>
+            {% endif %}
+
+            <div class="sauce-card__inner">
+              {% comment %} Watermark moved inside inner box {% endcomment %}
+              {% if block.settings.watermark_text != blank %}
+                <span class="sauce-card__watermark" aria-hidden="true">
+                  {{ block.settings.watermark_text }}
+                </span>
+              {% endif %}
+
+              {% if block.settings.title != blank %}
+                <h3 class="sauce-card__title" style="color: {{ text_color }};">
+                  {{ block.settings.title }}
+                </h3>
+              {% endif %}
+
+              {% if block.settings.description != blank %}
+                <p class="sauce-card__desc" style="color: {{ text_color }};">
+                  {{ block.settings.description }}
+                </p>
+              {% endif %}
+
+              <div class="sauce-card__image-wrap">
+                {% if block.settings.custom_image != blank %}
+                  <img
+                    src="{{ block.settings.custom_image | img_url: '300x' }}"
+                    alt="{{ block.settings.title | escape }}"
+                    class="sauce-card__image"
+                    loading="lazy"
+                    width="150"
+                    height="220"
+                  >
+                {% elsif block.settings.product != blank %}
+                  {% assign product_obj = all_products[block.settings.product] %}
+                  {% if product_obj.featured_image %}
+                    <img
+                      src="{{ product_obj.featured_image | img_url: '300x' }}"
+                      alt="{{ product_obj.title | escape }}"
+                      class="sauce-card__image"
+                      loading="lazy"
+                      width="150"
+                      height="220"
+                    >
+                  {% endif %}
+                {% endif %}
+              </div>
+
+              {% if block.settings.button_label != blank %}
+                <a
+                  href="{{ block.settings.button_link }}"
+                  class="sauce-card__btn"
+                  style="
+                    background-color: {{ block.settings.button_bg }};
+                    color: {{ block.settings.button_text_color }};
+                  "
+                >
+                  {{ block.settings.button_label }}
+                </a>
+              {% endif %}
+
+            </div>
+          </div>
+
+        {% endfor %}
+      </div>
+
+    {% endif %}
+
+  </div>
+</section>
+
+{% stylesheet %}
+
+.sauce-picker-section {
+  width: 100%;
+  overflow: hidden;
+  margin-top: 135px;
+}
+
+.sauce-picker__container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.sauce-picker__heading {
+  text-align: center;
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0 0 40px;
+  color: #1a1a1a;
+}
+
+.sauce-picker__subheading {
+  text-align: center;
+  font-size: 1rem;
+  color: #555;
+  margin: 0 0 40px;
+}
+
+.sauce-picker__grid {
+  display: grid;
+  gap: 30px;
+  justify-items: center;
+}
+
+.sauce-picker__grid--1 { grid-template-columns: repeat(1, minmax(220px, 320px)); justify-content: center; }
+.sauce-picker__grid--2 { grid-template-columns: repeat(2, 1fr); }
+.sauce-picker__grid--3 { grid-template-columns: repeat(3, 1fr); }
+.sauce-picker__grid--4 { grid-template-columns: repeat(3, 1fr); }
+.sauce-picker__grid--5 { grid-template-columns: repeat(3, 1fr); }
+.sauce-picker__grid--6 { grid-template-columns: repeat(3, 1fr); }
+
+.sauce-card {
+    position: relative;
+    border-radius: 56px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    box-shadow: 0 4px 18px #0000001a;
+    transition: transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s ease;
+    min-height: 550px;
+}
+
+.sauce-card__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Watermark: Now inside white box */
+.sauce-card__watermark {
+    font-family: Antonio,sans-serif;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 200px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #f0f0f0;
+    white-space: nowrap;
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+    line-height: 1;
+    z-index: 1;
+    opacity: .8;
+}
+
+.sauce-card__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 2px;
+    background-color: #ffffff;
+    padding: 30px 0px;
+    border-radius: 40px;
+    min-height: 500px;
+    overflow: hidden; /* Important for watermark clipping */
+}
+
+.sauce-card__title {
+  position: relative;
+  z-index: 3;
+  font-size: 26px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.sauce-card__desc {
+  position: relative;
+  z-index: 3;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+  line-height: 1.4;
+  opacity: 0.92;
+  max-width: 200px;
+}
+
+.sauce-card__image-wrap {
+  position: relative;
+  z-index: 3; /* Above watermark */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  min-height: 160px;
+  align-items: flex-end;
+}
+
+.sauce-card__image {
+    max-height: 300px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,.22));
+}
+
+.sauce-card__btn {
+  font-family: "Antonio", sans-serif;
+  position: relative;
+  z-index: 3;
+  display: inline-block;
+  margin-top: 6px;
+  padding: 9px 28px;
+  border-radius: 56px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .sauce-picker__grid--3, .sauce-picker__grid--4, .sauce-picker__grid--5, .sauce-picker__grid--6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .sauce-picker__container { padding-top: 40px; }
+  .sauce-picker__grid { grid-template-columns: 1fr !important; }
+  .sauce-card__watermark { font-size: 190px; letter-spacing: 1px; }
+  .sauce-picker-section {
+    padding-top: 0px !important;
+}
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Pick Your Sauce",
+  "tag": "section",
+  "class": "sauce-picker-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "PICK YOUR SAUCE"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading (optional)",
+      "default": "Choose your favorite flavor"
+    },
+    {
+      "type": "header",
+      "content": "Collection Mode (Auto)"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "color",
+      "id": "default_card_color",
+      "label": "Default Card Color (Collection Mode)",
+      "default": "#c0392b"
+    },
+    {
+      "type": "color",
+      "id": "default_text_color",
+      "label": "Default Text Color (Collection Mode)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "text",
+      "id": "watermark_text",
+      "label": "Watermark Text (Collection Mode)",
+      "default": "NUTS"
+    },
+    {
+      "type": "text",
+      "id": "default_btn_label",
+      "label": "Button Label (Collection Mode)",
+      "default": "SHOP NOW"
+    },
+    {
+      "type": "color",
+      "id": "default_btn_bg",
+      "label": "Button Background (Collection Mode)",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "default_btn_text",
+      "label": "Button Text Color (Collection Mode)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section Background Color",
+      "default": "#f5f0eb"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "sauce_card",
+      "name": "Sauce Card (Manual)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Sauce Name",
+          "default": "WALNUT BIRRIA"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Short Description",
+          "default": "Great as a dip, taco topping, as a marinade and much more."
+        },
+        {
+          "type": "text",
+          "id": "watermark_text",
+          "label": "Watermark Text",
+          "default": "NUTS"
+        },
+        {
+          "type": "image_picker",
+          "id": "card_bg_image",
+          "label": "Card Background Image"
+        },
+        {
+          "type": "color",
+          "id": "card_color",
+          "label": "Card Background Color (fallback)",
+          "default": "#c0392b"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Card Text Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_image",
+          "label": "Upload Product Image"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "SHOP NOW"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "color",
+          "id": "button_bg",
+          "label": "Button Background Color",
+          "default": "#1a1a1a"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button Text Color",
+          "default": "#ffffff"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pick Your Sauce",
+      "blocks": [
+        { "type": "sauce_card" },
+        { "type": "sauce_card" }
+      ]
+    }
+  ]
+}
+{% endschema %}
