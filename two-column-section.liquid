@@ -1,0 +1,507 @@
+{% comment %} Two Column Content Section — Dynamic with Schema {% endcomment %}
+
+{%- liquid
+  assign col_width = section.settings.column_width
+  assign img_pos   = section.settings.image_position
+
+  case col_width
+    when '30-70'
+      assign text_flex = '0 0 30%'
+      assign img_flex  = '0 0 70%'
+    when '40-60'
+      assign text_flex = '0 0 40%'
+      assign img_flex  = '0 0 60%'
+    when '60-40'
+      assign text_flex = '0 0 60%'
+      assign img_flex  = '0 0 40%'
+    when '70-30'
+      assign text_flex = '0 0 70%'
+      assign img_flex  = '0 0 30%'
+    else
+      assign text_flex = '0 0 50%'
+      assign img_flex  = '0 0 50%'
+  endcase
+-%}
+
+<style>
+  #tcc-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    max-width: 1400px;
+    margin-inline: auto;
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.section_padding_top }}px {{ section.settings.section_padding_side }}px {{ section.settings.section_padding_bottom }}px {{ section.settings.section_padding_side }}px;
+    gap: 0;
+    {% if img_pos == 'left' %}flex-direction: row-reverse;{% endif %}
+  }
+
+  #tcc-{{ section.id }} .tcc-text-col {
+    flex: {{ text_flex }};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    {% if img_pos == 'left' %}
+      padding: 0 0 0 {{ section.settings.col_gap }}px;
+    {% else %}
+      padding: 0 {{ section.settings.col_gap }}px 0 0;
+    {% endif %}
+  }
+
+  #tcc-{{ section.id }} .tcc-img-col {
+    flex: {{ img_flex }};
+    display: flex;
+    align-items: center;
+    justify-content: {{ section.settings.image_align }};
+  }
+
+  #tcc-{{ section.id }} .tcc-heading {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 700;
+    line-height: 1.18;
+    letter-spacing: -44;
+    color: {{ section.settings.heading_color }};
+    text-transform: {{ section.settings.heading_transform }};
+    margin-bottom: {{ section.settings.heading_margin_bottom }}px;
+    font-family: "Antonio", sans-serif;
+  }
+
+  #tcc-{{ section.id }} .tcc-desc {
+    font-size: {{ section.settings.text_size }}px;
+    line-height: 1.14;
+    letter-spacing: -26;
+    color: {{ section.settings.text_color }};
+    margin-bottom: {{ section.settings.desc_margin_bottom }}px;
+    max-width: {{ section.settings.desc_max_width }}px;
+    font-weight: 700;
+  }
+
+  #tcc-{{ section.id }} .tcc-btn {
+    display: inline-block;
+    padding: {{ section.settings.btn_padding_v }}px {{ section.settings.btn_padding_h }}px;
+    background: {{ section.settings.btn_bg_color }};
+    color: {{ section.settings.btn_text_color }};
+    border-radius: {{ section.settings.btn_border_radius }}px;
+    font-size: {{ section.settings.btn_font_size }}px;
+    font-weight: 700;
+    letter-spacing: -44;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: {{ section.settings.btn_border_width }}px solid {{ section.settings.btn_border_color }};
+    transition: background 0.3s, color 0.3s, transform 0.2s;
+    align-self: flex-start;
+    cursor: pointer;
+    font-family: "Antonio", sans-serif !important;
+  }
+
+  #tcc-{{ section.id }} .tcc-btn:hover {
+    background: {{ section.settings.btn_hover_bg }};
+    color: {{ section.settings.btn_hover_color }};
+    transform: scale(1.04);
+  }
+
+  #tcc-{{ section.id }} .tcc-img {
+    width: 100%;
+    max-height: {{ section.settings.image_max_height }}px;
+    object-fit: {{ section.settings.image_fit }};
+    display: block;
+  }
+
+  @media screen and (max-width: 768px) {
+    #tcc-{{ section.id }} {
+      flex-direction: column !important;
+      padding: 40px 20px;
+    }
+    #tcc-{{ section.id }} .tcc-text-col,
+    #tcc-{{ section.id }} .tcc-img-col {
+      flex: 0 0 100% !important;
+      width: 100% !important;
+      padding: 0 !important;
+    }
+    #tcc-{{ section.id }} .tcc-text-col {
+      margin-bottom: 28px;
+    }
+    #tcc-{{ section.id }} .tcc-heading {
+      font-size: {{ section.settings.heading_size | times: 0.7 | round }}px;
+      text-align: left !important;
+      padding-left: 0px !important;
+    }
+    .tcc-desc {
+      text-align: left !important;
+    }
+  }
+</style>
+
+<section id="tcc-{{ section.id }}">
+
+  {%- comment %} TEXT COLUMN {%- endcomment %}
+  <div class="tcc-text-col">
+
+    {%- if section.settings.heading != blank -%}
+      <{{ section.settings.heading_tag }} class="tcc-heading">
+        {{ section.settings.heading }}
+      </{{ section.settings.heading_tag }}>
+    {%- endif -%}
+
+    {%- if section.settings.description != blank -%}
+      <p class="tcc-desc">{{ section.settings.description }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.btn_label != blank and section.settings.btn_link != blank -%}
+      <a class="tcc-btn" href="{{ section.settings.btn_link }}">
+        {{ section.settings.btn_label }}
+      </a>
+    {%- endif -%}
+
+  </div>
+
+  {%- comment %} IMAGE COLUMN {%- endcomment %}
+  <div class="tcc-img-col">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 1200
+        | image_tag:
+          class: 'tcc-img',
+          alt: section.settings.image.alt | default: section.settings.heading,
+          loading: 'lazy',
+          widths: '300, 400, 600, 800, 1000, 1200'
+      }}
+    {%- else -%}
+      {{ 'image' | placeholder_svg_tag: 'tcc-img placeholder-svg' }}
+    {%- endif -%}
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "Two Column Content",
+  "tag": "div",
+  "class": "two-column-content-section",
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "📐 Layout"
+    },
+    {
+      "type": "select",
+      "id": "column_width",
+      "label": "Column Width (Text : Image)",
+      "options": [
+        { "value": "30-70", "label": "30% Text — 70% Image" },
+        { "value": "40-60", "label": "40% Text — 60% Image" },
+        { "value": "50-50", "label": "50% Text — 50% Image" },
+        { "value": "60-40", "label": "60% Text — 40% Image" },
+        { "value": "70-30", "label": "70% Text — 30% Image" }
+      ],
+      "default": "50-50"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left",  "label": "Left"  }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "range",
+      "id": "col_gap",
+      "label": "Column Inner Gap (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding Top (px)",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding Bottom (px)",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "section_padding_side",
+      "label": "Padding Left/Right (px)",
+      "min": 0,
+      "max": 160,
+      "step": 8,
+      "default": 48
+    },
+
+    {
+      "type": "header",
+      "content": "🎨 Background"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#e8e8e8"
+    },
+
+    {
+      "type": "header",
+      "content": "✏️ Text Content"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading Tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "So...Why Nut Oils?"
+    },
+    {
+      "type": "select",
+      "id": "heading_transform",
+      "label": "Heading Text Transform",
+      "options": [
+        { "value": "uppercase",   "label": "UPPERCASE" },
+        { "value": "capitalize",  "label": "Capitalize" },
+        { "value": "none",        "label": "None" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "select",
+      "id": "heading_font",
+      "label": "Heading Font",
+      "options": [
+        { "value": "inherit",      "label": "Theme Default" },
+        { "value": "sans-serif",   "label": "Sans Serif" },
+        { "value": "serif",        "label": "Serif" },
+        { "value": "monospace",    "label": "Monospace" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Font Size (px)",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "default": 52
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#1a1a2e"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "label": "Heading Bottom Space (px)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 20
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Because most sauces use oil as filler. We use nuts as flavour. Nut oils help create that smooth, rich, satisfying texture without making the sauce feel heavy, greasy or basic."
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Description Font Size (px)",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Description Color",
+      "default": "#555566"
+    },
+    {
+      "type": "range",
+      "id": "desc_margin_bottom",
+      "label": "Description Bottom Space (px)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "desc_max_width",
+      "label": "Description Max Width (px)",
+      "min": 200,
+      "max": 800,
+      "step": 20,
+      "default": 420
+    },
+
+    {
+      "type": "header",
+      "content": "🔘 Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button Text",
+      "default": "Buy Now"
+    },
+    {
+      "type": "url",
+      "id": "btn_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Button Background",
+      "default": "#1a1a2e"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_bg",
+      "label": "Button Hover Background",
+      "default": "#3a3a5e"
+    },
+    {
+      "type": "color",
+      "id": "btn_hover_color",
+      "label": "Button Hover Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "btn_border_radius",
+      "label": "Button Border Radius (px)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "btn_font_size",
+      "label": "Button Font Size (px)",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "btn_padding_v",
+      "label": "Button Padding Vertical (px)",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "btn_padding_h",
+      "label": "Button Padding Horizontal (px)",
+      "min": 8,
+      "max": 80,
+      "step": 2,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "btn_border_width",
+      "label": "Button Border Width (px)",
+      "min": 0,
+      "max": 6,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "btn_border_color",
+      "label": "Button Border Color",
+      "default": "#1a1a2e"
+    },
+
+    {
+      "type": "header",
+      "content": "🖼️ Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Section Image"
+    },
+    {
+      "type": "range",
+      "id": "image_max_height",
+      "label": "Image Max Height (px)",
+      "min": 100,
+      "max": 800,
+      "step": 20,
+      "default": 420
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image Fit",
+      "options": [
+        { "value": "contain", "label": "Contain" },
+        { "value": "cover",   "label": "Cover"   },
+        { "value": "fill",    "label": "Fill"    }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "select",
+      "id": "image_align",
+      "label": "Image Alignment",
+      "options": [
+        { "value": "flex-start", "label": "Left"   },
+        { "value": "center",     "label": "Center" },
+        { "value": "flex-end",   "label": "Right"  }
+      ],
+      "default": "center"
+    }
+
+  ],
+  "presets": [
+    {
+      "name": "Two Column Content",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}
