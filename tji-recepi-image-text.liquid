@@ -1,0 +1,590 @@
+{% comment %}
+========================================================================
+TJI Recipe Feature Banner
+Premium Glassmorphism Recipe Section
+========================================================================
+✔ Image / Video / YouTube Support
+✔ Blurred Background Effect
+✔ Premium Glass UI
+✔ Responsive
+✔ Shopify Customizer Ready
+========================================================================
+{% endcomment %}
+
+<section
+  id="recipe-feature-{{ section.id }}"
+  class="recipe-feature"
+  style="
+    background-color: {{ section.settings.background_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+
+  <div class="recipe-feature__container">
+
+    <div class="recipe-feature__inner {% if section.settings.layout_reverse %}recipe-feature__inner--reverse{% endif %}">
+
+      <!-- LEFT CONTENT -->
+      <div class="recipe-feature__content">
+
+        {% if section.settings.title != blank %}
+          <h2 class="recipe-feature__title">
+            {{ section.settings.title }}
+          </h2>
+        {% endif %}
+
+       {% if section.blocks.size > 0 %}
+  <div class="recipe-feature__ingredients">
+
+    {% if section.settings.ingredients_label != blank %}
+      <div class="recipe-feature__ingredients-label">
+        {{ section.settings.ingredients_label }}
+      </div>
+    {% endif %}
+
+    <ul class="recipe-feature__ingredients-list">
+
+      {% for block in section.blocks %}
+
+        {% if block.type == 'ingredient' %}
+
+          <li {{ block.shopify_attributes }}>
+            {{ block.settings.ingredient_text }}
+          </li>
+
+        {% endif %}
+
+      {% endfor %}
+
+    </ul>
+
+  </div>
+{% endif %}
+
+        {% if section.settings.button_label != blank %}
+          <a
+            href="{{ section.settings.button_link }}"
+            class="recipe-feature__btn"
+          >
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+
+      </div>
+
+      <!-- RIGHT MEDIA -->
+      <div
+        class="recipe-feature__media"
+        style="
+          --recipe-bg:url('{% if section.settings.image != blank %}{{ section.settings.image | image_url: width: 1400 }}{% endif %}');
+        "
+      >
+
+        {% if section.settings.media_type == 'image' %}
+
+          {% if section.settings.image != blank %}
+            {{
+              section.settings.image
+              | image_url: width: 1400
+              | image_tag:
+                loading: 'lazy',
+                class: 'recipe-feature__image'
+            }}
+          {% endif %}
+
+        {% elsif section.settings.media_type == 'video' %}
+
+          <div class="recipe-feature__video-wrap">
+
+                {% if section.settings.video_file != blank %}
+
+                {{
+                    section.settings.video_file
+                    | video_tag:
+                    class: 'recipe-feature__video',
+                    image_size: '1400x',
+                    autoplay: section.settings.video_autoplay,
+                    loop: section.settings.video_loop,
+                    muted: section.settings.video_autoplay,
+                    controls: true,
+                    playsinline: true
+                }}
+
+                {% endif %}
+
+            <button class="recipe-feature__play-btn" aria-label="Play">
+              <svg width="70" height="70" viewBox="0 0 70 70" fill="none">
+                <circle cx="35" cy="35" r="35" fill="rgba(255,255,255,.85)"/>
+                <polygon points="29,21 52,35 29,49" fill="#111"/>
+              </svg>
+            </button>
+
+          </div>
+
+        {% elsif section.settings.media_type == 'youtube' %}
+
+          {% assign youtube_id = section.settings.youtube_url | split: 'v=' | last | split: '&' | first %}
+
+          <div class="recipe-feature__video-wrap">
+
+            <iframe
+              src="https://www.youtube.com/embed/{{ youtube_id }}?autoplay=0&mute=1&loop=1&playlist={{ youtube_id }}"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+            ></iframe>
+
+          </div>
+
+        {% endif %}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<style>
+
+#recipe-feature-{{ section.id }}{
+  overflow:hidden;
+}
+
+#recipe-feature-{{ section.id }} *{
+  box-sizing:border-box;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__container{
+  width:100%;
+  max-width:{{ section.settings.container_max_width }}px;
+  margin:0 auto;
+  padding:0 {{ section.settings.side_padding }}px;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__inner{
+  display:flex;
+  align-items:center;
+  gap:50px;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__inner--reverse{
+  flex-direction:row-reverse;
+}
+.recipe-feature__video::-webkit-media-controls{
+  display:none !important;
+}
+
+.recipe-feature__video{
+  pointer-events:none;
+}
+#recipe-feature-{{ section.id }} .recipe-feature__content{
+     text-align:left;
+  flex:0 0 34%;
+}
+#recipe-feature-{{ section.id }} .recipe-feature__inner--reverse .recipe-feature__content{
+  text-align:right;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__title{
+  margin:0 0 18px;
+  font-size:{{ section.settings.title_size }}px;
+  line-height:1;
+  text-transform:uppercase;
+  font-weight:900;
+  color:{{ section.settings.title_color }};
+  letter-spacing:-0.02em;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__ingredients{
+  margin-bottom:28px;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__ingredients-label{
+  font-size:15px;
+  {% comment %} font-weight:700; {% endcomment %}
+  color: #1f2a32;
+  margin-bottom:1px;
+ font-family: "Hanken Grotesk", sans-serif;
+ font-weight: 600;
+
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__ingredients-list{
+  padding:0;
+  margin:0;
+  list-style:none;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__ingredients-list li{
+  font-size:15.4px;
+  color:#8d97a3;
+  font-family: "Hanken Grotesk", sans-serif;
+font-weight: 600;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px 28px;
+  border-radius:999px;
+  background:#202a33;
+  color:#fff;
+  text-decoration:none;
+  text-transform:uppercase;
+  font-size:22px;
+  {% comment %} font-weight:800; {% endcomment %}
+  letter-spacing:.08em;
+  transition:.3s ease;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__btn:hover{
+  transform:translateY(-2px);
+  opacity:.9;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__media{
+  flex:1 1 0;
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+
+  min-height:380px;
+
+  padding:20px;
+  border-radius:34px;
+
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__media::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background-image:var(--recipe-bg);
+  background-size:cover;
+  background-position:center;
+
+  transform:scale(1.2);
+  filter:blur(5px);
+
+  opacity:.6;
+  z-index:0;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__media::after{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:rgba(255,255,255,.14);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+
+  z-index:1;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__image,
+#recipe-feature-{{ section.id }} iframe,
+#recipe-feature-{{ section.id }} video{
+  position:relative;
+  z-index:2;
+
+  width:100%;
+  height:100%;
+  min-height:340px;
+
+  object-fit:cover;
+  display:block;
+
+  border-radius:26px;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__video-wrap{
+  position:relative;
+  z-index:2;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__play-btn{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  border:none;
+  background:none;
+  cursor:pointer;
+  z-index:5;
+  transition:.3s ease;
+}
+
+#recipe-feature-{{ section.id }} .recipe-feature__play-btn:hover{
+  transform:translate(-50%,-50%) scale(1.08);
+}
+/* =========================
+   MOBILE + TABLET
+========================= */
+/* MOBILE MEDIA FIX */
+
+ @media screen and (max-width:768px){
+
+  #recipe-feature-{{ section.id }} .recipe-feature__inner{
+    display:flex !important;
+    flex-direction:column-reverse !important;
+  }
+
+  #recipe-feature-{{ section.id }} .recipe-feature__content{
+    text-align:center;
+    margin-top:25px;
+    margin-bottom:0;
+  }
+
+  #recipe-feature-{{ section.id }} .recipe-feature__media{
+    order:-1;
+  }
+  .recipe-feature__content {
+    text-align: center !important;
+}
+
+}
+</style>
+
+<script>
+
+(function(){
+
+  const section = document.getElementById('recipe-feature-{{ section.id }}');
+
+  if(!section) return;
+
+  const btn = section.querySelector('.recipe-feature__play-btn');
+  const video = section.querySelector('.recipe-feature__video');
+
+  if(btn && video){
+
+    btn.addEventListener('click', function(){
+
+      if(video.paused){
+        video.play();
+        btn.style.opacity = '0';
+      }else{
+        video.pause();
+        btn.style.opacity = '1';
+      }
+
+    });
+
+    video.addEventListener('pause', function(){
+      btn.style.opacity = '1';
+    });
+
+    video.addEventListener('play', function(){
+      btn.style.opacity = '0';
+    });
+
+  }
+
+})();
+
+</script>
+
+{% schema %}
+{
+  "name": "TJI Recipe Feature",
+  "settings": [
+    {
+      "type":"text",
+      "id":"title",
+      "label":"Title",
+      "default":"GRILLED CHICKEN NUT SAUCE BURRITO BOWL"
+    },
+    {
+      "type":"color",
+      "id":"background_color",
+      "label":"Background",
+      "default":"#efefef"
+    },
+    {
+      "type":"color",
+      "id":"title_color",
+      "label":"Title Color",
+      "default":"#111111"
+    },
+    {
+  "type":"checkbox",
+  "id":"show_ingredients",
+  "label":"Show Ingredients",
+  "default":true
+},
+    {
+      "type":"range",
+      "id":"title_size",
+      "label":"Title Size",
+      "min":20,
+      "max":80,
+      "step":2,
+      "default":54
+    },
+    {
+      "type":"text",
+      "id":"ingredients_label",
+      "label":"Ingredients Label",
+      "default":"Ingredients"
+    },
+    {
+      "type":"text",
+      "id":"button_label",
+      "label":"Button Label",
+      "default":"READ MORE"
+    },
+    {
+      "type":"url",
+      "id":"button_link",
+      "label":"Button Link"
+    },
+
+    {
+      "type":"select",
+      "id":"media_type",
+      "label":"Media Type",
+      "options":[
+        {
+          "value":"image",
+          "label":"Image"
+        },
+        {
+          "value":"video",
+          "label":"Self Hosted Video"
+        },
+        {
+          "value":"youtube",
+          "label":"YouTube"
+        }
+      ],
+      "default":"image"
+    },
+    
+    {
+      "type":"image_picker",
+      "id":"image",
+      "label":"Image"
+    },
+    {
+    "type": "video",
+    "id": "video_file",
+    "label": "Upload Video"
+    },
+    {
+      "type":"text",
+      "id":"youtube_url",
+      "label":"YouTube URL"
+    },
+    {
+      "type":"checkbox",
+      "id":"video_autoplay",
+      "label":"Autoplay",
+      "default":false
+    },
+    {
+      "type":"checkbox",
+      "id":"video_loop",
+      "label":"Loop",
+      "default":true
+    },
+    {
+      "type":"checkbox",
+      "id":"layout_reverse",
+      "label":"Reverse Layout",
+      "default":false
+    },
+    {
+      "type":"range",
+      "id":"container_max_width",
+      "label":"Container Width",
+      "min":1000,
+      "max":1600,
+      "step":20,
+      "default":1400
+    },
+    {
+      "type":"range",
+      "id":"side_padding",
+      "label":"Side Padding",
+      "min":0,
+      "max":80,
+      "step":4,
+      "default":20
+    },
+    {
+      "type":"range",
+      "id":"padding_top",
+      "label":"Padding Top",
+      "min":0,
+      "max":150,
+      "step":5,
+      "default":40
+    },
+    {
+      "type":"range",
+      "id":"padding_bottom",
+      "label":"Padding Bottom",
+      "min":0,
+      "max":150,
+      "step":5,
+      "default":40
+    }
+  ],
+
+  "blocks":[
+    {
+      "type":"ingredient",
+      "name":"Ingredient",
+      "settings":[
+        {
+          "type":"text",
+          "id":"ingredient_text",
+          "label":"Ingredient",
+          "default":"Cooked rice or grain mix"
+        }
+      ]
+    }
+  ],
+
+  "presets":[
+    {
+      "name":"TJI Recipe Feature",
+      "blocks":[
+        {
+          "type":"ingredient",
+          "settings":{
+            "ingredient_text":"Grilled chicken breast"
+          }
+        },
+        {
+          "type":"ingredient",
+          "settings":{
+            "ingredient_text":"Cooked rice or grain mix"
+          }
+        },
+        {
+          "type":"ingredient",
+          "settings":{
+            "ingredient_text":"Black beans"
+          }
+        },
+        {
+          "type":"ingredient",
+          "settings":{
+            "ingredient_text":"Fresh coriander"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
